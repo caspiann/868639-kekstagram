@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Andrii Hodniuk](https://up.htmlacademy.ru/javascript/15/user/868639).
-* Наставник: `Неизвестно`.
+* Наставник: `Сергей Ufocoder`.
 
 ---
 
