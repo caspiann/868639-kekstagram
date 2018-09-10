@@ -36,22 +36,21 @@ var generateDescription = function () {
 var generatePhotos = function () {
   var photos = [];
   for (var i = 0; i < 25; i++) {
-    var photoInfo = {
+    photos.push({
       url: generateUrl(),
       likes: generateLikes(),
       comments: generateComments(),
       description: generateDescription()
-    };
-    photos.push(photoInfo);
+    });
   }
   return photos;
 };
 var createPhotos = function () {
-  for (var i = 0; i < generatePhotos().length; i++) {
+  for (var i = 0; i < photos.length; i++) {
     importN = document.importNode(item, true);
-    image.setAttribute('src', generatePhotos()[i].url);
-    picture_comments.innerHTML = generatePhotos()[i].comments.length;
-    picture_likes.innerHTML = generatePhotos()[i].likes;
+    image.setAttribute('src', photos[i].url);
+    picture_comments.innerHTML = photos[i].comments.length;
+    picture_likes.innerHTML = photos[i].likes;
     picture_template.content.appendChild(importN);
   }
   return picture_template;
@@ -60,21 +59,22 @@ var addInfo = function () {
   big_picture.classList.remove('hidden');
   big_picture.querySelector(
     '.big-picture__img img'
-  ).src = generatePhotos()[0].url;
+  ).src = photos[0].url;
   big_picture.querySelector(
     '.comments-count'
-  ).textContent = generatePhotos()[0].comments.length;
+  ).textContent = photos[0].comments.length;
   big_picture.querySelector(
     '.likes-count'
-  ).textContent = generatePhotos()[0].likes;
+  ).textContent = photos[0].likes;
   big_picture.querySelector(
     '.social__caption'
-  ).textContent = generatePhotos()[0].description;
+  ).textContent = photos[0].description;
   big_picture.querySelector('.social__picture').textContent =
     'img/avatar' + generateNumber(1, 6) + '.svg';
   return big_picture;
 };
 
+var photos = generatePhotos();
 var pictures = document.querySelector('.pictures');
 var picture_template = document.querySelector('#picture');
 var image = picture_template.content.querySelector('.picture__img');
