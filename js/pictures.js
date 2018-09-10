@@ -25,75 +25,73 @@ var item = picture_template.content.querySelector("a");
 var big_picture = document.querySelector(".big-picture");
 var social_сomment_сount = document.querySelector(".social__comment-count");
 var comments_loader = document.querySelector(".comments-loader");
-var a = 0;
 
-var generateRandomNumber = function (min, max) {
+var generateNumber = function (min, max) {
   return Math.round(Math.random() * (max - min) + min);
 };
-var generateRandomPhotoUrl = function () {
-  var photoNumber = generateRandomNumber(1, 25);
-  return "photos/" + photoNumber + ".jpg";
+var generateUrl = function () {
+  return "photos/" + generateNumber(1, 25) + ".jpg";
 };
-var generateRandomLikesNumber = function () {
-  return generateRandomNumber(15, 200);
+var generateLikes = function () {
+  return generateNumber(15, 200);
 };
 var generateComments = function () {
   var comments = [];
-  for (var i = 0; i < generateRandomNumber(1, 5); i++) {
-    comments.push(COMMENTS[generateRandomNumber(0, COMMENTS.length - 1)]);
+  for (var i = 0; i < generateNumber(1, 5); i++) {
+    comments.push(COMMENTS[generateNumber(0, COMMENTS.length - 1)]);
   }
   return comments;
 };
-var generateRandomDescriptionText = function () {
-  return DESCRIPTIONS[generateRandomNumber(0, DESCRIPTIONS.length - 1)];
+var generateDescription = function () {
+  return DESCRIPTIONS[generateNumber(0, DESCRIPTIONS.length - 1)];
 };
-var generateArrayOfPhotos = function () {
-  var ArrayOfPhotos = [];
+var generatePhotosArray = function () {
+  var photosArray = [];
   for (var i = 0; i < 25; i++) {
     var photoInfo = {
-      url: generateRandomPhotoUrl(),
-      likes: generateRandomLikesNumber(),
+      url: generateUrl(),
+      likes: generateLikes(),
       comments: generateComments(),
-      description: generateRandomDescriptionText()
+      description: generateDescription()
     };
-    ArrayOfPhotos.push(photoInfo);
+    photosArray.push(photoInfo);
   }
-  return ArrayOfPhotos;
+  return photosArray;
 };
 
-var createListOfPhotos = function () {
-  for (var i = 0; i < generateArrayOfPhotos().length; i++) {
+var createPhotos = function () {
+  for (var i = 0; i < generatePhotosArray().length; i++) {
     importN = document.importNode(item, true);
-    image.setAttribute("src", generateArrayOfPhotos()[i].url);
-    picture_comments.innerHTML = generateArrayOfPhotos()[i].comments.length;
-    picture_likes.innerHTML = generateArrayOfPhotos()[i].likes;
+    image.setAttribute("src", generatePhotosArray()[i].url);
+    picture_comments.innerHTML = generatePhotosArray()[i].comments.length;
+    picture_likes.innerHTML = generatePhotosArray()[i].likes;
     picture_template.content.appendChild(importN);
   }
   return picture_template;
 };
 
-pictures.appendChild(createListOfPhotos().content);
+pictures.appendChild(createPhotos().content);
 
-var addBigPictureInfo = function () {
+var addInfo = function () {
   big_picture.classList.remove("hidden");
   big_picture.querySelector(
     ".big-picture__img img"
-  ).src = generateArrayOfPhotos()[0].url;
+  ).src = generatePhotosArray()[0].url;
   big_picture.querySelector(
     ".comments-count"
-  ).textContent = generateArrayOfPhotos()[0].comments.length;
+  ).textContent = generatePhotosArray()[0].comments.length;
   big_picture.querySelector(
     ".likes-count"
-  ).textContent = generateArrayOfPhotos()[0].likes;
+  ).textContent = generatePhotosArray()[0].likes;
   big_picture.querySelector(
     ".social__caption"
-  ).textContent = generateArrayOfPhotos()[0].description;
+  ).textContent = generatePhotosArray()[0].description;
   big_picture.querySelector(".social__picture").textContent =
-    "img/avatar" + generateRandomNumber(1, 6) + ".svg";
+    "img/avatar" + generateNumber(1, 6) + ".svg";
   return big_picture;
 };
 
-addBigPictureInfo();
+addInfo();
 
 
 social_сomment_сount.classList.add("visually-hidden");
