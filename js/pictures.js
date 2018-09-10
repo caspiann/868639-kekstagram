@@ -34,7 +34,7 @@ var generateDescription = function () {
   return DESCRIPTIONS[generateNumber(0, DESCRIPTIONS.length - 1)];
 };
 var generatePhotos = function () {
-  var photosArray = [];
+  var photos = [];
   for (var i = 0; i < 25; i++) {
     var photoInfo = {
       url: generateUrl(),
@@ -42,9 +42,9 @@ var generatePhotos = function () {
       comments: generateComments(),
       description: generateDescription()
     };
-    photosArray.push(photoInfo);
+    photos.push(photoInfo);
   }
-  return photosArray;
+  return photos;
 };
 var createPhotos = function () {
   for (var i = 0; i < generatePhotos().length; i++) {
