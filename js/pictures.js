@@ -75,7 +75,7 @@ var generatePicturesData = function () {
 var renderPhotos = function () {
   for (var i = 0; i < PHOTOS_NUMBER; i++) {
     var importN = document.importNode(itemElement, true);
-    pictureImageElement.setAttribute("src", picturesData[i].url);
+    pictureImageElement.setAttribute('src', picturesData[i].url);
     pictureCommentsElement.innerHTML = picturesData[i].comments.length;
     pictureLikesElement.innerHTML = picturesData[i].likes;
     pictureTemplateElement.content.appendChild(importN);
@@ -96,7 +96,7 @@ var deleteStaticComments = function (comments) {
   for (var i = comments.length - 1; i >= 0; i--) {
     comments[i].parentNode.removeChild(comments[i]);
   }
-}
+};
 
 var renderBigPictureComments = function (commentsBlock) {
   generateComments().forEach(function (item) {
@@ -113,9 +113,9 @@ var renderBigPictureComments = function (commentsBlock) {
     textComment.textContent = item;
     comment.appendChild(img);
     comment.appendChild(textComment);
-    socialCommentsBlockElement.appendChild(comment);
+    commentsBlock.appendChild(comment);
   });
-}
+};
 
 var picturesData = generatePicturesData();
 var pictureElements = document.querySelector('.pictures');
@@ -129,7 +129,6 @@ var socialCommentsBlockElement = document.querySelector('.social__comments');
 var socialCommentElements = document.querySelectorAll('.social__comment');
 var socialCommentCountElement = document.querySelector('.social__comment-count');
 var commentsLoaderElement = document.querySelector('.comments-loader');
-var randomNumber = generateNumber(GENERATE_COMMENTS_MIN, GENERATE_COMMENTS_MAX);
 
 pictureElements.appendChild(renderPhotos().content);
 deleteStaticComments(socialCommentElements);
