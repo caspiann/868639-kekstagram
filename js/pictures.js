@@ -49,9 +49,7 @@ var generateLikes = function () {
 
 var generateComments = function () {
   var comments = [];
-  for (
-    var i = 0; i < randomNumber; i++
-  ) {
+  for (var i = 0; i < generateNumber(GENERATE_COMMENTS_MIN, GENERATE_COMMENTS_MAX); i++) {
     comments.push(COMMENTS[generateNumber(0, COMMENTS.length - 1)]);
   }
   return comments;
@@ -74,25 +72,50 @@ var generatePicturesData = function () {
   return photos;
 };
 
-var createPhotos = function (image, comment, like, template, data) {
-  for (var i = 0; i < picturesData.length; i++) {
+var renderPhotos = function () {
+  for (var i = 0; i < PHOTOS_NUMBER; i++) {
     var importN = document.importNode(itemElement, true);
-    image.setAttribute('src', data[i].url);
-    comment.innerHTML = data[i].comments.length;
-    like.innerHTML = data[i].likes;
-    template.content.appendChild(importN);
+    pictureImageElement.setAttribute("src", picturesData[i].url);
+    pictureCommentsElement.innerHTML = picturesData[i].comments.length;
+    pictureLikesElement.innerHTML = picturesData[i].likes;
+    pictureTemplateElement.content.appendChild(importN);
   }
-  return template;
+  return pictureTemplateElement;
 };
 
-var renderBigPicture = function (bigPictureElement, pictureData) {
-  bigPictureElement.classList.remove('.hidden');
-  bigPictureElement.querySelector('.big-picture__img img').src = pictureData.url;
-  bigPictureElement.querySelector('.comments-count').textContent = pictureData.comments.length;
-  bigPictureElement.querySelector('.likes-count').textContent = pictureData.likes;
-  bigPictureElement.querySelector('.social__caption').textContent = pictureData.description;
-  bigPictureElement.querySelector('.social__picture').textContent = 'img/avatar' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
+var renderBigPicture = function (bigPictureElement, picturesData) {
+  bigPictureElement.classList.remove('hidden');
+  bigPictureElement.querySelector('.big-picture__img img').src = picturesData.url;
+  bigPictureElement.querySelector('.comments-count').textContent = picturesData.comments.length;
+  bigPictureElement.querySelector('.likes-count').textContent = picturesData.likes;
+  bigPictureElement.querySelector('.social__caption').textContent = picturesData.description;
+  bigPictureElement.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
 };
+
+var deleteStaticComments = function (comments) {
+  for (var i = comments.length - 1; i >= 0; i--) {
+    comments[i].parentNode.removeChild(comments[i]);
+  }
+}
+
+var renderBigPictureComments = function (commentsBlock) {
+  generateComments().forEach(function (item) {
+    var comment = document.createElement('li');
+    comment.classList.add('social__comment');
+    var img = document.createElement('img');
+    img.classList.add('social__picture');
+    img.src = 'img/avatar-' + generateNumber(1, 6) + '.svg';
+    img.alt = 'Profile image';
+    img.width = 35;
+    img.height = 35;
+    var textComment = document.createElement('p');
+    textComment.classList.add('social__text');
+    textComment.textContent = item;
+    comment.appendChild(img);
+    comment.appendChild(textComment);
+    socialCommentsBlockElement.appendChild(comment);
+  });
+}
 
 var picturesData = generatePicturesData();
 var pictureElements = document.querySelector('.pictures');
@@ -102,11 +125,15 @@ var pictureCommentsElement = pictureTemplateElement.content.querySelector('.pict
 var pictureLikesElement = pictureTemplateElement.content.querySelector('.picture__likes');
 var itemElement = pictureTemplateElement.content.querySelector('a');
 var bigPictureElement = document.querySelector('.big-picture');
+var socialCommentsBlockElement = document.querySelector('.social__comments');
+var socialCommentElements = document.querySelectorAll('.social__comment');
 var socialCommentCountElement = document.querySelector('.social__comment-count');
 var commentsLoaderElement = document.querySelector('.comments-loader');
 var randomNumber = generateNumber(GENERATE_COMMENTS_MIN, GENERATE_COMMENTS_MAX);
 
-pictureElements.appendChild(createPhotos(pictureImageElement, pictureCommentsElement, pictureLikesElement, pictureTemplateElement, picturesData).content);
-renderBigPicture(bigPictureElement, picturesData[0]);
+pictureElements.appendChild(renderPhotos().content);
+deleteStaticComments(socialCommentElements);
 socialCommentCountElement.classList.add('visually-hidden');
 commentsLoaderElement.classList.add('visually-hidden');
+renderBigPicture(bigPictureElement, picturesData[0]);
+renderBigPictureComments(socialCommentsBlockElement);
