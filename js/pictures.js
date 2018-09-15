@@ -68,11 +68,11 @@ var renderPhotos = function (parentElement, pictureTemplateElement, picturesData
   var photosFragment = document.createDocumentFragment();
   picturesData.forEach(function (pictureData, index) {
     photosFragment.appendChild(renderPhoto(pictureTemplateElement, picturesData, index));
-  })
+  });
   parentElement.appendChild(photosFragment);
 };
 
-var renderBigPictureComment = function (bigPictureCommentElement, comment, index) {
+var renderBigPictureComment = function (bigPictureCommentElement, comment) {
   var commentElement = bigPictureCommentElement.cloneNode(true);
   commentElement.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
   commentElement.querySelector('.social__text').textContent = comment;
@@ -113,7 +113,6 @@ var bigPictureCommentElement = document.querySelector('.social__comment');
 var bigStartPictureCommentsElement = document.querySelectorAll('.social__comment');
 var socialCommentCountElement = document.querySelector('.social__comment-count');
 var commentsLoaderElement = document.querySelector('.comments-loader');
-var socialCommentElement = document.querySelector('.social__comment');
 
 deleteStaticComments(bigStartPictureCommentsElement);
 renderPhotos(pictureElements, pictureTemplateElement, picturesData);
