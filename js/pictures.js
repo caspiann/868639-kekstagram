@@ -72,15 +72,14 @@ var renderPhotos = function (parentElement, pictureTemplateElement, picturesData
   parentElement.appendChild(photosFragment);
 };
 
-var renderBigPictureComment = function (bigPictureCommentElement, comment) {
-  var commentElement = bigPictureCommentElement.cloneNode(true);
-  commentElement.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
-  commentElement.querySelector('.social__text').textContent = comment;
-  return commentElement;
-};
-
 var renderBigPictureComments = function (parentElement, bigPictureCommentElement, picturesData) {
   var commentFragments = document.createDocumentFragment();
+  var renderBigPictureComment = function (bigPictureCommentElement, comment) {
+    var commentElement = bigPictureCommentElement.cloneNode(true);
+    commentElement.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
+    commentElement.querySelector('.social__text').textContent = comment;
+    return commentElement;
+  };
   picturesData[0].comments.forEach(function (comment, index) {
     commentFragments.appendChild(renderBigPictureComment(bigPictureCommentElement, comment, index));
   });
@@ -102,6 +101,7 @@ var renderBigPicture = function (bigPictureElement, pictureData) {
   bigPictureElement.querySelector('.likes-count').textContent = pictureData.likes;
   bigPictureElement.querySelector('.social__caption').textContent = pictureData.description;
   bigPictureElement.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
+  renderBigPictureComments(bigPictureCommentsBlockElement, bigPictureCommentElement, picturesData);
 };
 
 var picturesData = generatePicturesData(PHOTOS_NUMBER);
@@ -116,5 +116,4 @@ var commentsLoaderElement = document.querySelector('.comments-loader');
 
 deleteStaticComments(bigStartPictureCommentsElement);
 renderPhotos(pictureElements, pictureTemplateElement, picturesData);
-renderBigPictureComments(bigPictureCommentsBlockElement, bigPictureCommentElement, picturesData);
 renderBigPicture(bigPictureElement, picturesData[0]);
