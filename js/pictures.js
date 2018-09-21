@@ -35,8 +35,8 @@ var generateComments = function () {
   var total = generateNumber(GENERATE_COMMENTS_MIN, GENERATE_COMMENTS_MAX);
   var clonedComments = COMMENTS.slice(0, COMMENTS.length);
   var resultComments = [];
-  while (clonedComments !== 0 && total > 0) {
-    var randomComment = clonedComments[total];
+  while (clonedComments.length !== 0 && total > 0) {
+    var randomComment = clonedComments[generateNumber(0, total)];
     resultComments.push(randomComment);
     clonedComments.splice(total, 1);
     total--;
@@ -114,47 +114,22 @@ var renderBigPicture = function (bigPictureElement, picturesData) {
   renderBigPictureComments(bigPictureCommentsBlockElement, picturesData);
 };
 
-var closeBigPicture = function () {
+var handleClickCloseBigPicture = function () {
   var newCommentElements = document.querySelectorAll('.social__comment');
   bigPictureElement.classList.add('hidden');
   deleteStaticComments(newCommentElements);
 };
 
-var closeEditingForm = function () {
+var handleKeydownCloseEditingForm = function () {
   uploadPictureElement.value = '';
   uploadPictureOverlayElement.classList.add('hidden');
 };
 
-var changeFilter = function (index) {
-  switch (index) {
-    case 0:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--none');
-      break;
-    case 1:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--chrome');
-      break;
-    case 2:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--sepia');
-      break;
-    case 3:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--marvin');
-      break;
-    case 4:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--phobos');
-      break;
-    case 5:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--heat');
-      break;
-    default:
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--none');
-  }
+var handleClickEffect = function (effect) {
+  var target = effect.querySelector('input');
+  var effectName = target.value;
+  imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
+  imagePreviewElement.classList.add('effects__preview--' + effectName);
 };
 
 var picturesData = generatePicturesData(PHOTOS_NUMBER);
@@ -183,26 +158,30 @@ pictureListElements.forEach(function (element, index) {
   });
 });
 
-closeBigPictureElement.addEventListener('click', closeBigPicture);
+closeBigPictureElement.addEventListener('click', handleClickCloseBigPicture);
+document.removeEventListener('click', handleClickCloseBigPicture);
 document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KEY_CODE_ESC) {
-    closeBigPicture();
+    handleClickCloseBigPicture();
   }
+  document.removeEventListener('keydown', handleClickCloseBigPicture);
 });
 
 uploadPictureElement.addEventListener('change', function () {
   uploadPictureOverlayElement.classList.remove('hidden');
 });
 
-closeEditPictureFormElement.addEventListener('click', closeEditingForm);
+closeEditPictureFormElement.addEventListener('click', handleKeydownCloseEditingForm);
+document.removeEventListener('click', handleKeydownCloseEditingForm);
 document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KEY_CODE_ESC) {
-    closeEditingForm();
+    handleKeydownCloseEditingForm();
   }
+  document.removeEventListener('keydown', handleKeydownCloseEditingForm);
 });
 
-effectElements.forEach(function (effect, index) {
+effectElements.forEach(function (effect) {
   effect.addEventListener('click', function () {
-    changeFilter(index);
+    handleClickEffect(effect);
   });
 });
