@@ -68,11 +68,11 @@ var renderPhoto = function (pictureTemplateElement, pictureData, index) {
   return pictureElement.content;
 };
 
-var renderPhotos = function ( parentElement, pictureTemplateElement, picturesData) {
+var renderPhotos = function (parentElement, pictureTemplateElement, picturesData) {
   var photosFragment = document.createDocumentFragment();
   picturesData.forEach(function (pictureData, index) {
     photosFragment.appendChild(
-      renderPhoto(pictureTemplateElement, picturesData, index)
+        renderPhoto(pictureTemplateElement, picturesData, index)
     );
   });
   parentElement.appendChild(photosFragment);
@@ -83,7 +83,7 @@ var renderBigPictureComments = function (parentElement, picturesData) {
   picturesData.comments.forEach(function (comment) {
     var commentElement = bigPictureCommentElement.cloneNode(true);
     commentElement.querySelector('.social__text').textContent = comment;
-    commentElement.querySelector('.social__picture').src ='img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
+    commentElement.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
     commentFragments.appendChild(commentElement);
   });
   parentElement.appendChild(commentFragments);
