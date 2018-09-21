@@ -68,11 +68,7 @@ var renderPhoto = function (pictureTemplateElement, pictureData, index) {
   return pictureElement.content;
 };
 
-var renderPhotos = function (
-  parentElement,
-  pictureTemplateElement,
-  picturesData
-) {
+var renderPhotos = function ( parentElement, pictureTemplateElement, picturesData) {
   var photosFragment = document.createDocumentFragment();
   picturesData.forEach(function (pictureData, index) {
     photosFragment.appendChild(
@@ -87,10 +83,7 @@ var renderBigPictureComments = function (parentElement, picturesData) {
   picturesData.comments.forEach(function (comment) {
     var commentElement = bigPictureCommentElement.cloneNode(true);
     commentElement.querySelector('.social__text').textContent = comment;
-    commentElement.querySelector('.social__picture').src =
-      'img/avatar-' +
-      generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) +
-      '.svg';
+    commentElement.querySelector('.social__picture').src ='img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
     commentFragments.appendChild(commentElement);
   });
   parentElement.appendChild(commentFragments);
@@ -133,30 +126,29 @@ var closeEditingForm = function () {
 };
 
 var changeFilter = function (index) {
-  var deleteLastClass = imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
   switch (index) {
     case 0:
-      deleteLastClass;
+      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
       imagePreviewElement.classList.add('effects__preview--none');
       break;
     case 1:
-      deleteLastClass;
+      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
       imagePreviewElement.classList.add('effects__preview--chrome');
       break;
     case 2:
-      deleteLastClass;
+      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
       imagePreviewElement.classList.add('effects__preview--sepia');
       break;
     case 3:
-      deleteLastClass;
+      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
       imagePreviewElement.classList.add('effects__preview--marvin');
       break;
     case 4:
-      deleteLastClass;
+      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
       imagePreviewElement.classList.add('effects__preview--phobos');
       break;
     case 5:
-      deleteLastClass;
+      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
       imagePreviewElement.classList.add('effects__preview--heat');
       break;
     default:
@@ -169,31 +161,17 @@ var picturesData = generatePicturesData(PHOTOS_NUMBER);
 var pictureTemplateElement = document.querySelector('#picture');
 var pictureElements = document.querySelector('.pictures');
 var bigPictureElement = document.querySelector('.big-picture');
-var bigPictureCommentsBlockElement = document.querySelector(
-  '.social__comments'
-);
+var bigPictureCommentsBlockElement = document.querySelector('.social__comments');
 var bigPictureCommentElement = document.querySelector('.social__comment');
-var socialCommentCountElement = document.querySelector(
-  '.social__comment-count'
-);
+var socialCommentCountElement = document.querySelector('.social__comment-count');
 var commentsLoaderElement = document.querySelector('.comments-loader');
-var bigStartPictureCommentsElement = document.querySelectorAll(
-  '.social__comment'
-);
-var closeBigPictureElement = bigPictureElement.querySelector(
-  '.big-picture__cancel'
-);
+var bigStartPictureCommentsElement = document.querySelectorAll('.social__comment');
+var closeBigPictureElement = bigPictureElement.querySelector('.big-picture__cancel');
 var uploadPictureElement = document.querySelector('#upload-file');
-var uploadPictureOverlayElement = document.querySelector(
-  '.img-upload__overlay'
-);
-var closeEditPictureFormElement = uploadPictureOverlayElement.querySelector(
-  '.img-upload__cancel'
-);
+var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
+var closeEditPictureFormElement = uploadPictureOverlayElement.querySelector('.img-upload__cancel');
 var imagePreviewElement = document.querySelector('.img-upload__preview img');
-var effectElements = Array.prototype.slice.call(
-  document.querySelectorAll('.effects__item')
-);
+var effectElements = Array.prototype.slice.call(document.querySelectorAll('.effects__item'));
 
 deleteStaticComments(bigStartPictureCommentsElement);
 renderPhotos(pictureElements, pictureTemplateElement, picturesData);
