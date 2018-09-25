@@ -160,7 +160,7 @@ var validateTags = function (tagsString) {
 
     if (!isValid) {
       return 'Every hash must start fromm "#"';
-    }
+    } return null;
   };
 
   var checkTagsOnlyHashSymbol = function (tags) {
@@ -169,8 +169,8 @@ var validateTags = function (tagsString) {
     });
 
     if (!isValid) {
-      return 'You can\'t use only "#" for your hastag';
-    }
+      return 'You can\'t use only "#" for your hashtag';
+    } return null;
   };
 
   var checkTagsRepeatTags = function (tags) {
@@ -179,29 +179,27 @@ var validateTags = function (tagsString) {
       for (var i = 0; i < tags.length; i++) {
         uniqArray[tags[i]] = true;
       }
-
       return tags.length === uniqArray.length ? true : false;
     };
 
     if (!hasDifferentTags()) {
-      return 'You can\'t use simular hashtags';
-    }
+      return 'You can\'t use similar hashtags';
+    } return null;
   };
 
   var checkTagsMoreThanFiveTags = function (tags) {
     if (tags.length > VALIDATION_TAGS_LENGTH) {
       return 'You can\'t use more than 5 hashtags';
-    }
+    } return null;
   };
 
   var checkTagsMoreThanTwentyChars = function (tags) {
     var isValid = tags.some(function (tag) {
       return tag.length < VALIDATION_TAG_LENGTH;
     });
-
     if (!isValid) {
       return 'Your hashtags length can\'t be more than 20 characters';
-    }
+    } return null;
   };
 
   var tags = normalizedTagsString.split(' ');
