@@ -26,6 +26,8 @@ var GENERATE_AVATAR_MAX = 6;
 var GENERATE_LIKES_MIN = 15;
 var GENERATE_LIKES_MAX = 200;
 var KEY_CODE_ESC = 27;
+var VALIDATION_TAGS_LENGTH = 5;
+var VALIDATION_TAG_LENGTH = 20;
 
 var generateNumber = function (min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -135,6 +137,12 @@ var handleClickEffect = function (effect) {
   imagePreviewElement.classList.add('effects__preview--' + effectName);
 };
 
+var handleKeydownEscPress = function (evt) {
+  if (evt.keyCode === KEY_CODE_ESC) {
+    handleKeydownCloseEditingForm();
+  }
+};
+
 var validateTags = function (tagsString) {
   var normalizedTagsString = tagsString.toLowerCase().trim().replace(/\s{2,}/g, ' ');
 
@@ -145,76 +153,84 @@ var validateTags = function (tagsString) {
     };
   }
 
-  var tags = normalizedTagsString.split(' ');
-  var errors = [];
-
-  var checkTagsStartWithHash = function () {
+  var checkTagsStartWithHash = function (tags) {
     var isValid = tags.every(function (tag) {
       return tag.startsWith('#');
     });
 
     if (!isValid) {
-      errors.push('Every hash must start fromm "#"');
+      return 'Every hash must start fromm "#"';
     }
   };
 
-  var checkTagsOnlyHashSimbol = function () {
+  var checkTagsOnlyHashSymbol = function (tags) {
     var isValid = tags.some(function (tag) {
       return tag !== '#';
     });
+
     if (!isValid) {
-      errors.push('You can\'t use only "#" for your hastag');
+      return 'You can\'t use only "#" for your hastag';
     }
   };
 
-  var checkTagsRepeatTags = function () {
-    var findRepeatTags = function () {
-      var obj = {};
+  var checkTagsRepeatTags = function (tags) {
+    var hasDifferentTags = function () {
+      var uniqArray = {};
       for (var i = 0; i < tags.length; i++) {
-        var str = tags[i];
-        obj[str] = true;
+        uniqArray[tags[i]] = true;
       }
-      var uniqArray = Object.keys(obj);
+
       return tags.length === uniqArray.length ? true : false;
     };
-    var isValid = findRepeatTags();
-    if (!isValid) {
-      errors.push('You can\'t use simular hashtags');
+
+    if (!hasDifferentTags()) {
+      return 'You can\'t use simular hashtags';
     }
   };
 
-  var checkTagsMoreThanFiveTags = function () {
-    if (tags.length > 5) {
-      errors.push('You can\'t use more than 5 hashtags');
+  var checkTagsMoreThanFiveTags = function (tags) {
+    if (tags.length > VALIDATION_TAGS_LENGTH) {
+      return 'You can\'t use more than 5 hashtags';
     }
   };
 
-  var checkTagsMoreThanTwentyChars = function () {
+  var checkTagsMoreThanTwentyChars = function (tags) {
     var isValid = tags.some(function (tag) {
-      return tag.length < 20;
+      return tag.length < VALIDATION_TAG_LENGTH;
     });
+
     if (!isValid) {
-      errors.push('Your hashtags length can\'t be more than 20 characters');
+      return 'Your hashtags length can\'t be more than 20 characters';
     }
   };
 
-  [
+  var tags = normalizedTagsString.split(' ');
+
+  var errors = [
     checkTagsStartWithHash,
-    checkTagsOnlyHashSimbol,
+    checkTagsOnlyHashSymbol,
     checkTagsRepeatTags,
     checkTagsMoreThanFiveTags,
     checkTagsMoreThanTwentyChars
-  ].forEach(function (checkFunction) {
-    checkFunction(tags);
-  });
+  ].reduce(function (accumulator, checkFunction) {
+    var error = checkFunction(tags);
+
+    if (error) {
+      accumulator.push(error);
+    }
+
+    return accumulator;
+
+  }, []);
 
   return {
-    isValid: errors.length > 0 ? false : true,
+    isValid: errors.length > 0 ? true : false,
     errors: errors
   };
 };
 
 var inputHashtagsElement = document.querySelector('.text__hashtags');
+var inputCommentsElement = document.querySelector('.text__description');
 
 var picturesData = generatePicturesData(PHOTOS_NUMBER);
 var pictureTemplateElement = document.querySelector('#picture');
@@ -268,18 +284,23 @@ uploadPictureElement.addEventListener('change', function () {
   uploadPictureOverlayElement.classList.remove('hidden');
 });
 
-closeEditPictureFormElement.addEventListener(
-    'click',
-    handleKeydownCloseEditingForm
-);
-
+closeEditPictureFormElement.addEventListener('click', handleKeydownCloseEditingForm);
 document.removeEventListener('click', handleKeydownCloseEditingForm);
 
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === KEY_CODE_ESC) {
-    handleKeydownCloseEditingForm();
-  }
-  document.removeEventListener('keydown', handleKeydownCloseEditingForm);
+document.addEventListener('keydown', handleKeydownEscPress);
+document.removeEventListener('keydown', handleKeydownEscPress);
+
+inputHashtagsElement.addEventListener('focusin', function () {
+  document.removeEventListener('keydown', handleKeydownEscPress);
+});
+inputHashtagsElement.addEventListener('focusout', function () {
+  document.addEventListener('keydown', handleKeydownEscPress);
+});
+inputCommentsElement.addEventListener('focusin', function () {
+  document.removeEventListener('keydown', handleKeydownEscPress);
+});
+inputCommentsElement.addEventListener('focusout', function () {
+  document.addEventListener('keydown', handleKeydownEscPress);
 });
 
 effectElements.forEach(function (effect) {
@@ -290,8 +311,8 @@ effectElements.forEach(function (effect) {
 
 inputHashtagsElement.addEventListener('change', function () {
   var validation = validateTags(inputHashtagsElement.value);
-  if (!validation.isValid === true) {
-    inputHashtagsElement.setCustomValidity(validation.errros[0]);
+  if (!validation.isValid) {
+    inputHashtagsElement.setCustomValidity(validation.errors[0]);
   } else {
     inputHashtagsElement.setCustomValidity('');
   }
