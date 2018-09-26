@@ -144,7 +144,10 @@ var handleKeydownEscPress = function (evt) {
 };
 
 var validateTags = function (tagsString) {
-  var normalizedTagsString = tagsString.toLowerCase().trim().replace(/\s{2,}/g, ' ');
+  var normalizedTagsString = tagsString
+    .toLowerCase()
+    .trim()
+    .replace(/\s{2,}/g, ' ');
 
   if (normalizedTagsString === '') {
     return {
@@ -160,7 +163,8 @@ var validateTags = function (tagsString) {
 
     if (!isValid) {
       return 'Every hash must start fromm "#"';
-    } return null;
+    }
+    return null;
   };
 
   var checkTagsOnlyHashSymbol = function (tags) {
@@ -170,7 +174,8 @@ var validateTags = function (tagsString) {
 
     if (!isValid) {
       return 'You can\'t use only "#" for your hashtag';
-    } return null;
+    }
+    return null;
   };
 
   var checkTagsRepeatTags = function (tags) {
@@ -179,18 +184,20 @@ var validateTags = function (tagsString) {
       for (var i = 0; i < tags.length; i++) {
         uniqArray[tags[i]] = true;
       }
-      return tags.length === uniqArray.length ? true : false;
+      return tags.length === uniqArray.length ? false : true;
     };
 
-    if (!hasDifferentTags()) {
+    if (hasDifferentTags()) {
       return 'You can\'t use similar hashtags';
-    } return null;
+    }
+    return null;
   };
 
   var checkTagsMoreThanFiveTags = function (tags) {
     if (tags.length > VALIDATION_TAGS_LENGTH) {
       return 'You can\'t use more than 5 hashtags';
-    } return null;
+    }
+    return null;
   };
 
   var checkTagsMoreThanTwentyChars = function (tags) {
@@ -199,7 +206,8 @@ var validateTags = function (tagsString) {
     });
     if (!isValid) {
       return 'Your hashtags length can\'t be more than 20 characters';
-    } return null;
+    }
+    return null;
   };
 
   var tags = normalizedTagsString.split(' ');
@@ -218,12 +226,11 @@ var validateTags = function (tagsString) {
     }
 
     return accumulator;
-
   }, []);
 
   return {
-    isValid: errors.length > 0 ? true : false,
-    errors: errors
+    isValid: !errors.length ? false : true,
+    firstError: errors[0]
   };
 };
 
@@ -282,7 +289,10 @@ uploadPictureElement.addEventListener('change', function () {
   uploadPictureOverlayElement.classList.remove('hidden');
 });
 
-closeEditPictureFormElement.addEventListener('click', handleKeydownCloseEditingForm);
+closeEditPictureFormElement.addEventListener(
+    'click',
+    handleKeydownCloseEditingForm
+);
 document.removeEventListener('click', handleKeydownCloseEditingForm);
 
 document.addEventListener('keydown', handleKeydownEscPress);
@@ -309,9 +319,10 @@ effectElements.forEach(function (effect) {
 
 inputHashtagsElement.addEventListener('change', function () {
   var validation = validateTags(inputHashtagsElement.value);
-  if (!validation.isValid) {
-    inputHashtagsElement.setCustomValidity(validation.errors[0]);
+  if (validation.isValid) {
+    inputHashtagsElement.setCustomValidity(validation.firstError);
   } else {
     inputHashtagsElement.setCustomValidity('');
   }
 });
+
