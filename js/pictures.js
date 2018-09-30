@@ -28,6 +28,7 @@ var GENERATE_LIKES_MAX = 200;
 var KEY_CODE_ESC = 27;
 var VALIDATION_TAGS_LENGTH = 5;
 var VALIDATION_TAG_LENGTH = 20;
+var EFFECT_DEFAULT_VALUE = 100;
 
 var EFFECTS = {
   none: {
@@ -116,8 +117,9 @@ var renderPhotos = function (
 
 var renderBigPictureComments = function (parentElement, picturesData) {
   var commentFragments = document.createDocumentFragment();
+  var commentElement = bigPictureCommentElement.cloneNode(true);
+
   picturesData.comments.forEach(function (comment) {
-    var commentElement = bigPictureCommentElement.cloneNode(true);
     commentElement.querySelector('.social__text').textContent = comment;
     commentElement.querySelector('.social__picture').src =
       'img/avatar-' +
@@ -151,33 +153,38 @@ var renderBigPicture = function (bigPictureElement, pictureData) {
   renderBigPictureComments(bigPictureCommentsBlockElement, pictureData);
 };
 
-var handleClickCloseBigPicture = function () {
+var closeBigPictureClickHandler = function () {
   bigPictureElement.classList.add('hidden');
   deleteComments(bigPictureCommentsBlockElement);
 };
 
-var handleKeydownCloseEditingForm = function () {
+var closeEditingFormKeydownHandler = function () {
   uploadPictureElement.value = '';
   uploadPictureOverlayElement.classList.add('hidden');
 };
 
-var handleClickEffect = function (effect) {
+var effectClickHandler = function (effect) {
   var target = effect.querySelector('input');
   var effectName = target.value;
+  var effectPercent = effectLevelLineElement.offsetWidth + 'px';
+
+  imagePreviewElement.style.filter = createPreviewFilterStyle(EFFECT_DEFAULT_VALUE); //
   imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
   imagePreviewElement.classList.add('effects__preview--' + effectName);
-  changeEffectsValue(100);
-  effectLevelDepthElement.style.width = effectLevelPinElement.style.left = effectLevelLineElement.offsetWidth + 'px';
-  if (imagePreviewElement.classList[0] === 'effects__preview--none') {
+
+  effectLevelDepthElement.style.width = effectPercent;
+  effectLevelPinElement.style.left = effectPercent;
+
+  if (effectName === 'none') {
     effectLevelElement.classList.add('hidden');
   } else {
     effectLevelElement.classList.remove('hidden');
   }
 };
 
-var handleKeydownEscPress = function (evt) {
+var keydownEscPressHandler = function (evt) {
   if (evt.keyCode === KEY_CODE_ESC) {
-    handleKeydownCloseEditingForm();
+    closeEditingFormKeydownHandler();
   }
 };
 
@@ -272,68 +279,53 @@ var validateTags = function (tagsString) {
   };
 };
 
-var getProportion = function (max, min, value) {
+var convertValueToScale = function (max, min, value) {
   return ((max - min) * value) / 100 + min;
 };
 
 var getMovePinValue = function () {
-  effectLevelPinElement.addEventListener('mousedown', function (evt) {
-    var getCoords = function (elem) {
-      var box = elem.getBoundingClientRect();
-      return {
-        left: box.left + pageXOffset
-      };
-    };
-    var pinCoords = getCoords(effectLevelPinElement);
-    var shiftX = evt.pageX - pinCoords.left;
-    var sliderCoords = getCoords(effectLevelLineElement);
-    var mouseMove = function (e) {
-      var newLeft = e.pageX - shiftX - sliderCoords.left;
-      if (newLeft < 0) {
-        newLeft = 0;
-      }
-      var rightEdge = effectLevelLineElement.offsetWidth;
-      if (newLeft > rightEdge) {
-        newLeft = rightEdge;
-      }
-      effectLevelPinElement.style.left = newLeft + 'px';
+  effectLevelPinElement.addEventListener('mousedown', function (mouseDownEvent) {
+    var pinCoordsLeft = effectLevelPinElement.getBoundingClientRect().left;
+    var sliderCoordsLeft = effectLevelLineElement.getBoundingClientRect().left;
+    var sliderOffsetWidth = effectLevelLineElement.offsetWidth;
+
+    var mouseMoveHandler = function (mouseMoveEvent) {
+      var pinOffsetLeftValue = Math.min(
+          Math.max(0, mouseMoveEvent.pageX - mouseDownEvent.pageX + pinCoordsLeft - sliderCoordsLeft),
+          sliderOffsetWidth
+      );
+
+      var effectPercentValue = Math.round((pinOffsetLeftValue / sliderOffsetWidth) * 100);
+
+      effectValueElement.value = effectPercentValue;
+      effectLevelPinElement.style.left = pinOffsetLeftValue + 'px';
       effectLevelDepthElement.style.width = effectLevelPinElement.style.left;
-      var effectValue = Math.round((newLeft / rightEdge) * 100);
-      effectValueElement.value = effectValue;
-      changeEffectsValue(effectValueElement.value);
+
+      imagePreviewElement.style.filter = createPreviewFilterStyle(effectPercentValue);
     };
-    var mouseUp = function () {
-      document.removeEventListener('mousemove', mouseMove);
-      document.removeEventListener('mouseup', mouseUp);
+    var mouseUpHandler = function () {
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
     };
-    document.addEventListener('mousemove', mouseMove);
-    document.addEventListener('mouseup', mouseUp);
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
   });
 };
 
-var changeEffectsValue = function (value) {
-  var filterName = imagePreviewElement.getAttribute('class');
-  switch (filterName) {
-    case EFFECTS.none.effect:
-      imagePreviewElement.style.filter = 'none';
-      break;
+var createPreviewFilterStyle = function (value) {
+  switch (imagePreviewElement.getAttribute('class')) {
     case EFFECTS.chrome.effect:
-      imagePreviewElement.style.filter = 'grayscale(' + getProportion(EFFECTS.chrome.maxValue, EFFECTS.chrome.minValue, value) + ')';
-      break;
+      return 'grayscale(' + convertValueToScale(EFFECTS.chrome.maxValue, EFFECTS.chrome.minValue, value) + ')';
     case EFFECTS.sepia.effect:
-      imagePreviewElement.style.filter = 'sepia(' + getProportion(EFFECTS.sepia.maxValue, EFFECTS.sepia.minValue, value) + ')';
-      break;
+      return 'sepia(' + convertValueToScale(EFFECTS.sepia.maxValue, EFFECTS.sepia.minValue, value) + ')';
     case EFFECTS.marvin.effect:
-      imagePreviewElement.style.filter = 'invert(' + getProportion(EFFECTS.marvin.maxValue, EFFECTS.marvin.minValue, value) + '%)';
-      break;
+      return 'invert(' + convertValueToScale(EFFECTS.marvin.maxValue, EFFECTS.marvin.minValue, value) + '%)';
     case EFFECTS.phobos.effect:
-      imagePreviewElement.style.filter = 'blur(' + getProportion(EFFECTS.phobos.maxValue, EFFECTS.phobos.minValue, value) + 'px)';
-      break;
+      return 'blur(' + convertValueToScale(EFFECTS.phobos.maxValue, EFFECTS.phobos.minValue, value) + 'px)';
     case EFFECTS.heat.effect:
-      imagePreviewElement.style.filter = 'brightness(' + getProportion(EFFECTS.heat.maxValue, EFFECTS.heat.minValue, value) + ')';
-      break;
+      return 'brightness(' + convertValueToScale(EFFECTS.heat.maxValue, EFFECTS.heat.minValue, value) + ')';
     default:
-      break;
+      return 'none';
   }
 };
 
@@ -343,8 +335,10 @@ var picturesData = generatePicturesData(PHOTOS_NUMBER);
 var pictureTemplateElement = document.querySelector('#picture');
 var pictureElements = document.querySelector('.pictures');
 var bigPictureElement = document.querySelector('.big-picture');
+
 var bigPictureCommentsBlockElement = document.querySelector('.social__comments');
-var bigPictureCommentElement = document.querySelector('.social__comment');
+var bigPictureCommentElement = document.querySelector('.social__comment'); // @TODO: clone
+
 var socialCommentCountElement = document.querySelector('.social__comment-count');
 var commentsLoaderElement = document.querySelector('.comments-loader');
 var closeBigPictureElement = bigPictureElement.querySelector('.big-picture__cancel');
@@ -352,6 +346,7 @@ var uploadPictureElement = document.querySelector('#upload-file');
 var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
 var closeEditPictureFormElement = uploadPictureOverlayElement.querySelector('.img-upload__cancel');
 var imagePreviewElement = document.querySelector('.img-upload__preview img');
+
 var effectElements = Array.prototype.slice.call(document.querySelectorAll('.effects__item'));
 var effectLevelElement = document.querySelector('.effect-level');
 var effectLevelLineElement = document.querySelector('.effect-level__line');
@@ -364,21 +359,22 @@ renderPhotos(pictureElements, pictureTemplateElement, picturesData);
 getMovePinValue();
 
 var pictureListElements = document.querySelectorAll('.picture');
+
 pictureListElements.forEach(function (element, index) {
   element.addEventListener('click', function () {
     renderBigPicture(bigPictureElement, picturesData[index]);
   });
 });
 
-closeBigPictureElement.addEventListener('click', handleClickCloseBigPicture);
+closeBigPictureElement.addEventListener('click', closeBigPictureClickHandler);
 
-document.removeEventListener('click', handleClickCloseBigPicture);
+document.removeEventListener('click', closeBigPictureClickHandler);
 
 document.addEventListener('keydown', function (evt) {
   if (evt.keyCode === KEY_CODE_ESC) {
-    handleClickCloseBigPicture();
+    closeBigPictureClickHandler();
   }
-  document.removeEventListener('keydown', handleClickCloseBigPicture);
+  document.removeEventListener('keydown', closeBigPictureClickHandler);
 });
 
 uploadPictureElement.addEventListener('change', function () {
@@ -387,28 +383,28 @@ uploadPictureElement.addEventListener('change', function () {
   effectLevelElement.classList.add('hidden');
 });
 
-closeEditPictureFormElement.addEventListener('click', handleKeydownCloseEditingForm);
-document.removeEventListener('click', handleKeydownCloseEditingForm);
+closeEditPictureFormElement.addEventListener('click', closeEditingFormKeydownHandler);
+document.removeEventListener('click', closeEditingFormKeydownHandler);
 
-document.addEventListener('keydown', handleKeydownEscPress);
-document.removeEventListener('keydown', handleKeydownEscPress);
+document.addEventListener('keydown', keydownEscPressHandler);
+document.removeEventListener('keydown', keydownEscPressHandler);
 
 inputHashtagsElement.addEventListener('focusin', function () {
-  document.removeEventListener('keydown', handleKeydownEscPress);
+  document.removeEventListener('keydown', keydownEscPressHandler);
 });
 inputHashtagsElement.addEventListener('focusout', function () {
-  document.addEventListener('keydown', handleKeydownEscPress);
+  document.addEventListener('keydown', keydownEscPressHandler);
 });
 inputCommentsElement.addEventListener('focusin', function () {
-  document.removeEventListener('keydown', handleKeydownEscPress);
+  document.removeEventListener('keydown', keydownEscPressHandler);
 });
 inputCommentsElement.addEventListener('focusout', function () {
-  document.addEventListener('keydown', handleKeydownEscPress);
+  document.addEventListener('keydown', keydownEscPressHandler);
 });
 
 effectElements.forEach(function (effect) {
   effect.addEventListener('click', function () {
-    handleClickEffect(effect);
+    effectClickHandler(effect);
   });
 });
 
