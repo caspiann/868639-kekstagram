@@ -29,6 +29,37 @@ var KEY_CODE_ESC = 27;
 var VALIDATION_TAGS_LENGTH = 5;
 var VALIDATION_TAG_LENGTH = 20;
 
+var EFFECTS = {
+  none: {
+    effect: 'effects__preview--none'
+  },
+  chrome: {
+    effect: 'effects__preview--chrome',
+    minValue: 0,
+    maxValue: 1
+  },
+  sepia: {
+    effect: 'effects__preview--sepia',
+    minValue: 0,
+    maxValue: 1
+  },
+  marvin: {
+    effect: 'effects__preview--marvin',
+    minValue: 0,
+    maxValue: 100
+  },
+  phobos: {
+    effect: 'effects__preview--phobos',
+    minValue: 0,
+    maxValue: 3
+  },
+  heat: {
+    effect: 'effects__preview--heat',
+    minValue: 1,
+    maxValue: 3
+  }
+};
+
 var generateNumber = function (min, max) {
   return Math.round(Math.random() * (max - min) + min);
 };
@@ -135,6 +166,13 @@ var handleClickEffect = function (effect) {
   var effectName = target.value;
   imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
   imagePreviewElement.classList.add('effects__preview--' + effectName);
+  changeEffectsValue(100);
+  effectLevelDepthElement.style.width = effectLevelPinElement.style.left = effectLevelLineElement.offsetWidth + 'px';
+  if (imagePreviewElement.classList[0] === 'effects__preview--none') {
+    effectLevelElement.classList.add('hidden');
+  } else {
+    effectLevelElement.classList.remove('hidden');
+  }
 };
 
 var handleKeydownEscPress = function (evt) {
@@ -234,38 +272,96 @@ var validateTags = function (tagsString) {
   };
 };
 
+var getProportion = function (max, min, value) {
+  return ((max - min) * value) / 100 + min;
+};
+
+var getMovePinValue = function () {
+  effectLevelPinElement.addEventListener('mousedown', function (evt) {
+    var getCoords = function (elem) {
+      var box = elem.getBoundingClientRect();
+      return {
+        left: box.left + pageXOffset
+      };
+    };
+    var pinCoords = getCoords(effectLevelPinElement);
+    var shiftX = evt.pageX - pinCoords.left;
+    var sliderCoords = getCoords(effectLevelLineElement);
+    var mouseMove = function (e) {
+      var newLeft = e.pageX - shiftX - sliderCoords.left;
+      if (newLeft < 0) {
+        newLeft = 0;
+      }
+      var rightEdge = effectLevelLineElement.offsetWidth;
+      if (newLeft > rightEdge) {
+        newLeft = rightEdge;
+      }
+      effectLevelPinElement.style.left = newLeft + 'px';
+      effectLevelDepthElement.style.width = effectLevelPinElement.style.left;
+      var effectValue = Math.round((newLeft / rightEdge) * 100);
+      effectValueElement.value = effectValue;
+      changeEffectsValue(effectValueElement.value);
+    };
+    var mouseUp = function () {
+      document.removeEventListener('mousemove', mouseMove);
+      document.removeEventListener('mouseup', mouseUp);
+    };
+    document.addEventListener('mousemove', mouseMove);
+    document.addEventListener('mouseup', mouseUp);
+  });
+};
+
+var changeEffectsValue = function (value) {
+  var filterName = imagePreviewElement.getAttribute('class');
+  switch (filterName) {
+    case EFFECTS.none.effect:
+      imagePreviewElement.style.filter = 'none';
+      break;
+    case EFFECTS.chrome.effect:
+      imagePreviewElement.style.filter = 'grayscale(' + getProportion(EFFECTS.chrome.maxValue, EFFECTS.chrome.minValue, value) + ')';
+      break;
+    case EFFECTS.sepia.effect:
+      imagePreviewElement.style.filter = 'sepia(' + getProportion(EFFECTS.sepia.maxValue, EFFECTS.sepia.minValue, value) + ')';
+      break;
+    case EFFECTS.marvin.effect:
+      imagePreviewElement.style.filter = 'invert(' + getProportion(EFFECTS.marvin.maxValue, EFFECTS.marvin.minValue, value) + '%)';
+      break;
+    case EFFECTS.phobos.effect:
+      imagePreviewElement.style.filter = 'blur(' + getProportion(EFFECTS.phobos.maxValue, EFFECTS.phobos.minValue, value) + 'px)';
+      break;
+    case EFFECTS.heat.effect:
+      imagePreviewElement.style.filter = 'brightness(' + getProportion(EFFECTS.heat.maxValue, EFFECTS.heat.minValue, value) + ')';
+      break;
+    default:
+      break;
+  }
+};
+
 var inputHashtagsElement = document.querySelector('.text__hashtags');
 var inputCommentsElement = document.querySelector('.text__description');
-
 var picturesData = generatePicturesData(PHOTOS_NUMBER);
 var pictureTemplateElement = document.querySelector('#picture');
 var pictureElements = document.querySelector('.pictures');
 var bigPictureElement = document.querySelector('.big-picture');
-var bigPictureCommentsBlockElement = document.querySelector(
-    '.social__comments'
-);
+var bigPictureCommentsBlockElement = document.querySelector('.social__comments');
 var bigPictureCommentElement = document.querySelector('.social__comment');
-var socialCommentCountElement = document.querySelector(
-    '.social__comment-count'
-);
+var socialCommentCountElement = document.querySelector('.social__comment-count');
 var commentsLoaderElement = document.querySelector('.comments-loader');
-var closeBigPictureElement = bigPictureElement.querySelector(
-    '.big-picture__cancel'
-);
+var closeBigPictureElement = bigPictureElement.querySelector('.big-picture__cancel');
 var uploadPictureElement = document.querySelector('#upload-file');
-var uploadPictureOverlayElement = document.querySelector(
-    '.img-upload__overlay'
-);
-var closeEditPictureFormElement = uploadPictureOverlayElement.querySelector(
-    '.img-upload__cancel'
-);
+var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
+var closeEditPictureFormElement = uploadPictureOverlayElement.querySelector('.img-upload__cancel');
 var imagePreviewElement = document.querySelector('.img-upload__preview img');
-var effectElements = Array.prototype.slice.call(
-    document.querySelectorAll('.effects__item')
-);
+var effectElements = Array.prototype.slice.call(document.querySelectorAll('.effects__item'));
+var effectLevelElement = document.querySelector('.effect-level');
+var effectLevelLineElement = document.querySelector('.effect-level__line');
+var effectLevelDepthElement = document.querySelector('.effect-level__depth');
+var effectLevelPinElement = document.querySelector('.effect-level__pin');
+var effectValueElement = document.querySelector('.effect-level__value');
 
 deleteComments(bigPictureCommentsBlockElement);
 renderPhotos(pictureElements, pictureTemplateElement, picturesData);
+getMovePinValue();
 
 var pictureListElements = document.querySelectorAll('.picture');
 pictureListElements.forEach(function (element, index) {
@@ -287,12 +383,11 @@ document.addEventListener('keydown', function (evt) {
 
 uploadPictureElement.addEventListener('change', function () {
   uploadPictureOverlayElement.classList.remove('hidden');
+  effectLevelDepthElement.style.width = effectLevelPinElement.style.left = effectLevelLineElement.offsetWidth + 'px';
+  effectLevelElement.classList.add('hidden');
 });
 
-closeEditPictureFormElement.addEventListener(
-    'click',
-    handleKeydownCloseEditingForm
-);
+closeEditPictureFormElement.addEventListener('click', handleKeydownCloseEditingForm);
 document.removeEventListener('click', handleKeydownCloseEditingForm);
 
 document.addEventListener('keydown', handleKeydownEscPress);
@@ -325,4 +420,3 @@ inputHashtagsElement.addEventListener('change', function () {
     inputHashtagsElement.setCustomValidity('');
   }
 });
-
