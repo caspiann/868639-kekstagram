@@ -6,7 +6,7 @@
   var GENERATE_AVATAR_MAX = 6;
   var PHOTOS_NUMBER = 25;
   var picturesData = window.generatedData.generatePicturesData(PHOTOS_NUMBER);
-  var bigPictureCommentElement = document.querySelector('.social__comment'); // @TODO: clone
+  var bigPictureCommentElement = document.querySelector('.social__comment');
   var bigPictureCommentsBlockElement = document.querySelector('.social__comments');
   var socialCommentCountElement = document.querySelector('.social__comment-count');
   var commentsLoaderElement = document.querySelector('.comments-loader');
@@ -17,7 +17,7 @@
     return Math.round(Math.random() * (max - min) + min);
   };
 
-  var renderPhoto = function (pictureData) {
+  var renderPhoto = function (pictureTemplateElement, pictureData) {
     var pictureElement = pictureTemplateElement.cloneNode(true);
     pictureElement.content.querySelector('.picture__img').src = pictureData.url;
     pictureElement.content.querySelector('.picture__comments').textContent =
@@ -27,7 +27,7 @@
     return pictureElement;
   };
 
-  var renderPhotos = function (parentElement) {
+  var renderPhotos = function (parentElement, pictureTemplateElement, picturesData) {
     var photosFragment = document.createDocumentFragment();
     picturesData.forEach(function (pictureData, index) {
       photosFragment.appendChild(
@@ -37,7 +37,7 @@
     parentElement.appendChild(photosFragment);
   };
 
-  var renderBigPictureComments = function (parentElement) {
+  var renderBigPictureComments = function (parentElement, picturesData) {
     var commentFragments = document.createDocumentFragment();
     var commentElement = bigPictureCommentElement.cloneNode(true);
     picturesData.comments.forEach(function (comment) {
