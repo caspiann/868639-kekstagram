@@ -17,7 +17,7 @@
     return Math.round(Math.random() * (max - min) + min);
   };
 
-  var renderPhoto = function (pictureTemplateElement, pictureData) {
+  var renderPhoto = function (pictureTemplate, pictureData) {
     var pictureElement = pictureTemplateElement.cloneNode(true);
     pictureElement.content.querySelector('.picture__img').src = pictureData.url;
     pictureElement.content.querySelector('.picture__comments').textContent =
@@ -27,20 +27,20 @@
     return pictureElement;
   };
 
-  var renderPhotos = function (parentElement, pictureTemplateElement, picturesData) {
+  var renderPhotos = function (parentElement, pictureTemplate, dataOfPictures) {
     var photosFragment = document.createDocumentFragment();
-    picturesData.forEach(function (pictureData, index) {
+    dataOfPictures.forEach(function (pictureData, index) {
       photosFragment.appendChild(
-          renderPhoto(pictureTemplateElement, picturesData[index]).content
+          renderPhoto(pictureTemplateElement, dataOfPictures[index]).content
       );
     });
     parentElement.appendChild(photosFragment);
   };
 
-  var renderBigPictureComments = function (parentElement, picturesData) {
+  var renderBigPictureComments = function (parentElement, dataOfPictures) {
     var commentFragments = document.createDocumentFragment();
     var commentElement = bigPictureCommentElement.cloneNode(true);
-    picturesData.comments.forEach(function (comment) {
+    dataOfPictures.comments.forEach(function (comment) {
       commentElement.querySelector('.social__text').textContent = comment;
       commentElement.querySelector('.social__picture').src =
         'img/avatar-' +
