@@ -25,7 +25,7 @@
         effectLevelPinElement.style.left = pinOffsetLeftValue + 'px';
         effectLevelDepthElement.style.width = effectLevelPinElement.style.left;
 
-        imagePreviewElement.style.filter = window.filterStyle.createPreviewFilterStyle(effectPercentValue);
+        imagePreviewElement.style.filter = window.filterStyles.createPreviewFilterStyle(effectPercentValue);
       };
       var mouseUpHandler = function () {
         document.removeEventListener('mousemove', mouseMoveHandler);
