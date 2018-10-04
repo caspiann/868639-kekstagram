@@ -103,7 +103,7 @@
     }, []);
 
     return {
-      isValid: !errors.length ? false : true,
+      isValid: errors.length ? false : true,
       firstError: errors[0]
     };
   };
