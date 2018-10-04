@@ -2,15 +2,6 @@
 
 (function () {
   var EFFECT_DEFAULT_VALUE = 100;
-  var effectElements = Array.prototype.slice.call(document.querySelectorAll('.effects__item'));
-  var imagePreviewElement = document.querySelector('.img-upload__preview img');
-  var effectLevelLineElement = document.querySelector('.effect-level__line');
-  var effectLevelDepthElement = document.querySelector('.effect-level__depth');
-  var effectLevelPinElement = document.querySelector('.effect-level__pin');
-  var effectLevelElement = document.querySelector('.effect-level');
-  var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
-  var uploadPictureElement = document.querySelector('#upload-file');
-
   var EFFECTS = {
     none: {
       effect: 'effects__preview--none'
@@ -41,17 +32,26 @@
       maxValue: 3
     }
   };
+  var effectElements = Array.prototype.slice.call(document.querySelectorAll('.effects__item'));
+  var imagePreviewElement = document.querySelector('.img-upload__preview img');
+  var effectLevelLineElement = document.querySelector('.effect-level__line');
+  var effectLevelDepthElement = document.querySelector('.effect-level__depth');
+  var effectLevelPinElement = document.querySelector('.effect-level__pin');
+  var effectLevelElement = document.querySelector('.effect-level');
+  var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
+  var uploadPictureElement = document.querySelector('#upload-file');
+
 
   var convertValueToScale = function (max, min, value) {
     return ((max - min) * value) / 100 + min;
   };
 
-  var effectClickHandler = function (effect) {
+  var createEffectClickHandler = function (effect) {
     var target = effect.querySelector('input');
     var effectName = target.value;
     var effectPercent = effectLevelLineElement.offsetWidth + 'px';
 
-    imagePreviewElement.style.filter = window.filterStyles.createPreviewFilterStyle(EFFECT_DEFAULT_VALUE);
+    imagePreviewElement.style.filter = window.popupFilterStyles.createPreviewFilterStyle(EFFECT_DEFAULT_VALUE);
     imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
     imagePreviewElement.classList.add('effects__preview--' + effectName);
 
@@ -73,10 +73,10 @@
 
   effectElements.forEach(function (effect) {
     effect.addEventListener('click', function () {
-      effectClickHandler(effect);
+      createEffectClickHandler(effect);
     });
   });
-  window.filterStyles = {
+  window.popupFilterStyles = {
     createPreviewFilterStyle: function (value) {
       switch (imagePreviewElement.getAttribute('class')) {
         case EFFECTS.chrome.effect:

@@ -5,7 +5,7 @@
   var VALIDATION_TAG_LENGTH = 20;
   var KEY_CODE_ESC = 27;
   var VALIDATION_ERROR_TEXT = {
-    StartWithHashError: 'Every hash must start fromm "#"',
+    StartWithHashError: 'Every hash must start from "#"',
     OnlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
     RepeatTagsError: 'You can\'t use similar hashtags',
     MoreThanFiveTagsError: 'You can\'t use more than 5 hashtags',
@@ -138,9 +138,9 @@
   inputHashtagsElement.addEventListener('change', function () {
     var validation = validateTags(inputHashtagsElement.value);
     if (validation.isValid) {
-      inputHashtagsElement.setCustomValidity(validation.firstError);
-    } else {
       inputHashtagsElement.setCustomValidity('');
+    } else {
+      inputHashtagsElement.setCustomValidity(validation.firstError);
     }
   });
 })();
