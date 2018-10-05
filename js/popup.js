@@ -35,7 +35,6 @@
     bigPicture.querySelector('.big-picture__img img').src = pictureData.url;
     bigPicture.querySelector('.comments-count').textContent = pictureData.comments.length;
     bigPicture.querySelector('.likes-count').textContent = pictureData.likes;
-    bigPicture.querySelector('.social__caption').textContent = pictureData.description;
     bigPicture.querySelector('.social__picture').src = 'img/avatar-' + generateNumber(GENERATE_AVATAR_MIN, GENERATE_AVATAR_MAX) + '.svg';
     renderBigPictureComments(bigPictureCommentsBlockElement, pictureData);
   };
@@ -48,7 +47,7 @@
 
   pictureListElements.forEach(function (element, index) {
     element.addEventListener('click', function () {
-      renderBigPicture(bigPictureElement, window.generatedData.picturesData[index]);
+      renderBigPicture(bigPictureElement, window.cachePictures[index]);
     });
   });
 
