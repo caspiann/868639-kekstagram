@@ -4,7 +4,7 @@
   var VALIDATION_TAGS_LENGTH = 5;
   var VALIDATION_TAG_LENGTH = 20;
   var KEY_CODE_ESC = 27;
-  var VALIDATION_ERROR_TEXT = {
+  var VALIDATION_ERRORS_TEXT = {
     StartWithHashError: 'Every hash must start from "#"',
     OnlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
     RepeatTagsError: 'You can\'t use similar hashtags',
@@ -36,7 +36,7 @@
       });
 
       if (!isValid) {
-        return VALIDATION_ERROR_TEXT.StartWithHashError;
+        return VALIDATION_ERRORS_TEXT.StartWithHashError;
       }
       return null;
     };
@@ -47,7 +47,7 @@
       });
 
       if (!isValid) {
-        return VALIDATION_ERROR_TEXT.OnlyHashSymbolError;
+        return VALIDATION_ERRORS_TEXT.OnlyHashSymbolError;
       }
       return null;
     };
@@ -62,14 +62,14 @@
       };
 
       if (hasDifferentTags()) {
-        return VALIDATION_ERROR_TEXT.RepeatTagsError;
+        return VALIDATION_ERRORS_TEXT.RepeatTagsError;
       }
       return null;
     };
 
     var checkTagsMoreThanFiveTags = function (tags) {
       if (tags.length > VALIDATION_TAGS_LENGTH) {
-        return VALIDATION_ERROR_TEXT.MoreThanFiveTagsError;
+        return VALIDATION_ERRORS_TEXT.MoreThanFiveTagsError;
       }
       return null;
     };
@@ -79,7 +79,7 @@
         return tag.length < VALIDATION_TAG_LENGTH;
       });
       if (!isValid) {
-        return VALIDATION_ERROR_TEXT.MoreThanTwentyCharsError;
+        return VALIDATION_ERRORS_TEXT.MoreThanTwentyCharsError;
       }
       return null;
     };
@@ -110,6 +110,8 @@
 
   var closeEditingFormKeydownHandler = function () {
     uploadPictureElement.value = '';
+    inputCommentsElement.value = '';
+    inputHashtagsElement.value = '';
     uploadPictureOverlayElement.classList.add('hidden');
   };
 
@@ -143,4 +145,5 @@
       inputHashtagsElement.setCustomValidity(validation.firstError);
     }
   });
+
 })();
