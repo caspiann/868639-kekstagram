@@ -4,6 +4,7 @@
   var GENERATE_AVATAR_MIN = 1;
   var GENERATE_AVATAR_MAX = 6;
   var KEY_CODE_ESC = 27;
+  var errorBlockStyles = 'display: flex; justify-content: center; background: #EFFF00; color: #FF0000; width: 100%; padding: 5px 0; position: absolute; font-size: 20px';
   var pictureElements = document.querySelector('.pictures');
   var pictureTemplateElement = document.querySelector('#picture');
   var bigPictureElement = document.querySelector('.big-picture');
@@ -51,7 +52,7 @@
     bigPictureCommentsBlockElement.innerHTML = '';
   };
 
-  window.load('https://js.dump.academy/kekstagram/data', function (response) {
+  var onLoad = function (response) {
     window.cachePictures = response;
     var photosFragment = document.createDocumentFragment();
     response.forEach(function (pictureData, index) {
@@ -66,7 +67,16 @@
         renderBigPicture(bigPictureElement, window.cachePictures[index]);
       });
     });
-  }, function () { });
+  };
+
+  var onError = function (message) {
+    var errorElement = document.createElement('div');
+    errorElement.style = errorBlockStyles;
+    errorElement.textContent = message;
+    document.body.insertAdjacentElement('afterbegin', errorElement);
+  };
+
+  window.backend.getData(onLoad, onError);
 
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === KEY_CODE_ESC) {
