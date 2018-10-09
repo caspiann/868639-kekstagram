@@ -9,9 +9,9 @@
     return Math.round(Math.random() * (max - min) + min);
   };
 
-  window.newData = {
-    getNewPictures: function () {
-      var newPictures = window.cachePictures.slice();
+  window.picturesFilter = {
+    getNewPictures: function (data) {
+      var newPictures = data.slice();
       var resultArr = [];
       for (var i = NEW_PHOTO_MIN; i < NEW_PHOTO_MAX; i++) {
         var element = newPictures[generateNumber(NEW_PHOTO_MIN, NEW_PHOTO_MAX)];
@@ -24,8 +24,8 @@
       }
       return resultArr;
     },
-    getMostDiscussedElements: function () {
-      var newPictures = window.cachePictures.slice();
+    getMostDiscussedElements: function (data) {
+      var newPictures = data.slice();
       return newPictures.sort(function (first, second) {
         return second.comments.length - first.comments.length;
       });
