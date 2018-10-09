@@ -1,10 +1,12 @@
 'use strict';
 
+// @TODO: when popup is shown
+
 (function () {
   var VALIDATION_TAGS_LENGTH = 5;
   var VALIDATION_TAG_LENGTH = 20;
   var KEY_CODE_ESC = 27;
-  var VALIDATION_ERRORS_TEXT = {
+  var VALIDATION_ERROR_TEXT = {
     StartWithHashError: 'Every hash must start from "#"',
     OnlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
     RepeatTagsError: 'You can\'t use similar hashtags',
@@ -16,6 +18,7 @@
   var uploadPictureElement = document.querySelector('#upload-file');
   var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
   var inputCommentsElement = document.querySelector('.text__description');
+  var formElement = document.querySelector('#upload-select-image');
 
   var validateTags = function (tagsString) {
     var normalizedTagsString = tagsString
@@ -36,7 +39,7 @@
       });
 
       if (!isValid) {
-        return VALIDATION_ERRORS_TEXT.StartWithHashError;
+        return VALIDATION_ERROR_TEXT.StartWithHashError;
       }
       return null;
     };
@@ -47,7 +50,7 @@
       });
 
       if (!isValid) {
-        return VALIDATION_ERRORS_TEXT.OnlyHashSymbolError;
+        return VALIDATION_ERROR_TEXT.OnlyHashSymbolError;
       }
       return null;
     };
@@ -62,14 +65,14 @@
       };
 
       if (hasDifferentTags()) {
-        return VALIDATION_ERRORS_TEXT.RepeatTagsError;
+        return VALIDATION_ERROR_TEXT.RepeatTagsError;
       }
       return null;
     };
 
     var checkTagsMoreThanFiveTags = function (tags) {
       if (tags.length > VALIDATION_TAGS_LENGTH) {
-        return VALIDATION_ERRORS_TEXT.MoreThanFiveTagsError;
+        return VALIDATION_ERROR_TEXT.MoreThanFiveTagsError;
       }
       return null;
     };
@@ -79,7 +82,7 @@
         return tag.length < VALIDATION_TAG_LENGTH;
       });
       if (!isValid) {
-        return VALIDATION_ERRORS_TEXT.MoreThanTwentyCharsError;
+        return VALIDATION_ERROR_TEXT.MoreThanTwentyCharsError;
       }
       return null;
     };
@@ -144,6 +147,20 @@
     } else {
       inputHashtagsElement.setCustomValidity(validation.firstError);
     }
+  });
+
+  var onLoad = function () {
+    closeEditingFormKeydownHandler();
+  };
+
+  var onError = function (message) {
+    closeEditingFormKeydownHandler();
+    window.popupError.createSendError(message);
+  };
+
+  formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.sendData(onLoad, onError, new FormData(formElement));
   });
 
 })();
