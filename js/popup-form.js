@@ -1,7 +1,5 @@
 'use strict';
 
-// @TODO: when popup is shown
-
 (function () {
   var VALIDATION_TAGS_LENGTH = 5;
   var VALIDATION_TAG_LENGTH = 20;
@@ -61,7 +59,8 @@
         for (var i = 0; i < tags.length; i++) {
           uniqArray[tags[i]] = true;
         }
-        return tags.length === uniqArray.length ? false : true;
+        var uniqArrayLength = Object.keys(uniqArray).length;
+        return tags.length === uniqArrayLength ? false : true;
       };
 
       if (hasDifferentTags()) {
@@ -151,11 +150,12 @@
 
   var onLoad = function () {
     closeEditingFormKeydownHandler();
+    window.messages.createSuccessSendMessage();
   };
 
   var onError = function (message) {
     closeEditingFormKeydownHandler();
-    window.popupError.createSendError(message);
+    window.messages.createSuccessSend(message);
   };
 
   formElement.addEventListener('submit', function (evt) {
