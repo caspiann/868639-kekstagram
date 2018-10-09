@@ -3,13 +3,15 @@
 (function () {
   var VALIDATION_TAGS_LENGTH = 5;
   var VALIDATION_TAG_LENGTH = 20;
+  var VALIDATION_COMMENT_LENGTH = 140;
   var KEY_CODE_ESC = 27;
   var VALIDATION_ERROR_TEXT = {
     StartWithHashError: 'Every hash must start from "#"',
     OnlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
     RepeatTagsError: 'You can\'t use similar hashtags',
     MoreThanFiveTagsError: 'You can\'t use more than 5 hashtags',
-    MoreThanTwentyCharsError: 'Your hashtags length can\'t be more than 20 characters'
+    MoreThanTwentyCharsError: 'Your hashtags length can\'t be more than 20 characters',
+    MoreThanAllowCharsComment: 'Your comment length mast be less than 140 characters include spaces'
   };
   var inputHashtagsElement = document.querySelector('.text__hashtags');
   var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
@@ -110,6 +112,13 @@
     };
   };
 
+  var validateComments = function (comment) {
+    if (comment === '' || comment.length < VALIDATION_COMMENT_LENGTH) {
+      return true;
+    }
+    return false;
+  };
+
   var closeEditingFormKeydownHandler = function () {
     uploadPictureElement.value = '';
     inputCommentsElement.value = '';
@@ -145,6 +154,15 @@
       inputHashtagsElement.setCustomValidity('');
     } else {
       inputHashtagsElement.setCustomValidity(validation.firstError);
+    }
+  });
+
+  inputCommentsElement.addEventListener('change', function () {
+    var validation = validateComments(inputCommentsElement.value);
+    if (validation === true) {
+      inputCommentsElement.setCustomValidity('');
+    } else {
+      inputCommentsElement.setCustomValidity(VALIDATION_ERROR_TEXT.MoreThanAllowCharsComment);
     }
   });
 
