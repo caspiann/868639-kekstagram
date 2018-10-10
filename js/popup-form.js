@@ -136,6 +136,8 @@
   closeEditPictureFormElement.addEventListener('click', closeEditingFormKeydownHandler);
   document.removeEventListener('click', closeEditingFormKeydownHandler);
 
+  document.addEventListener('keydown', keydownEscPressHandler);
+
   inputHashtagsElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', keydownEscPressHandler);
   });
@@ -169,12 +171,12 @@
 
   var onLoad = function () {
     closeEditingFormKeydownHandler();
-    window.messages.createSuccessSendMessage();
+    window.messages.createSuccessSend();
   };
 
   var onError = function (message) {
     closeEditingFormKeydownHandler();
-    window.messages.createSuccessSend(message);
+    window.messages.createFailedSend(message);
   };
 
   formElement.addEventListener('submit', function (evt) {
