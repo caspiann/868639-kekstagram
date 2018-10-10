@@ -3,11 +3,11 @@
 (function () {
   var ERROR_POPUP_TIMEOUT = 3000;
   var KEY_CODE_ESC = 27;
+
   var errorBlockStyles = 'display: flex; justify-content: center; background: #EFFF00; color: #FF0000; width: 100%; padding: 5px 0; position: absolute; font-size: 20px';
   var successTemplate = document.querySelector('#success').content;
   var errorTemplate = document.querySelector('#error').content;
   var mainElement = document.querySelector('main');
-
 
   var createPopupError = function (message) {
     var errorElement = document.createElement('div');
@@ -73,7 +73,6 @@
     mainElement.appendChild(successTemplate);
     var successPopupElement = mainElement.querySelector('.success');
     var successButtonElement = mainElement.querySelector('.success__button');
-
 
     successButtonElement.addEventListener('click', successButtonClickHandler);
     document.addEventListener('keydown', documentKeydownHandler);

@@ -38,5 +38,4 @@
     getData: createRequest(URL_GET_DATA, 'GET'),
     sendData: createRequest(URL_POST_DATA, 'POST')
   };
-
 })();
