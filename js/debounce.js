@@ -1,6 +1,6 @@
 'use strict';
-(function () {
 
+(function () {
   var DEBOUNCE_INTERVAL = 500;
 
   window.debounce = function (fn) {
@@ -15,5 +15,4 @@
       }, DEBOUNCE_INTERVAL);
     };
   };
-
 })();

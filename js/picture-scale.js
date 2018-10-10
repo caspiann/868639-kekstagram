@@ -1,6 +1,6 @@
 'use strict';
-(function () {
 
+(function () {
   var MIN_VALUE = 25;
   var MAX_VALUE = 100;
   var STEP = 25;
@@ -13,22 +13,18 @@
   scaleControlValueElement.value = MAX_VALUE + '%';
   imgPreviewElement.style.transform = 'scale(' + MAX_VALUE / 100 + ')';
 
-  var changePictureScale = function (scaleValue) {
-    var currentScale = parseInt(scaleControlValueElement.value, 10);
-    currentScale = currentScale + (scaleValue);
+  var createScaleClickHandler = function (scaleValue) {
+    return function clickHandler() {
+      var currentScale = parseInt(scaleControlValueElement.value, 10);
+      currentScale = currentScale + (scaleValue);
 
-    if (currentScale >= MIN_VALUE && currentScale <= MAX_VALUE) {
-      scaleControlValueElement.value = currentScale + '%';
-      imgPreviewElement.style.transform = 'scale(' + currentScale / 100 + ')';
-    }
+      if (currentScale >= MIN_VALUE && currentScale <= MAX_VALUE) {
+        scaleControlValueElement.value = currentScale + '%';
+        imgPreviewElement.style.transform = 'scale(' + currentScale / 100 + ')';
+      }
+    };
   };
 
-  scaleControlBiggerElement.addEventListener('click', function () {
-    changePictureScale(STEP);
-  });
-
-  scaleControlSmallerElement.addEventListener('click', function () {
-    changePictureScale(-STEP);
-  });
-
+  scaleControlBiggerElement.addEventListener('click', createScaleClickHandler(STEP));
+  scaleControlSmallerElement.addEventListener('click', createScaleClickHandler(-STEP));
 })();

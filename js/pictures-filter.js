@@ -1,8 +1,7 @@
 'use strict';
-(function () {
 
-  var NEW_PICTURE_MIN = 0;
-  var NEW_PICTURE_MAX = 10;
+(function () {
+  var PICTURE_FILTER_LIMIT = 10;
 
   var generateNumber = function (min, max) {
     return Math.round(Math.random() * (max - min) + min);
@@ -12,22 +11,20 @@
     getNewPictures: function (pictures) {
       var newPictures = pictures.slice();
       var resultPictures = [];
-      var maxNewPictureLength = 10;
-      while (newPictures.length !== 0 && maxNewPictureLength > 0) {
-        var index = generateNumber(NEW_PICTURE_MIN, NEW_PICTURE_MAX);
-        var randomComment = newPictures[index];
-        resultPictures.push(randomComment);
-        newPictures.splice(index, 1);
-        maxNewPictureLength--;
-        index--;
+      var picturesLimit = PICTURE_FILTER_LIMIT;
+      while (newPictures.length && picturesLimit > 0) {
+        var randomIndex = generateNumber(0, newPictures.length);
+        var randomPicture = newPictures[randomIndex];
+        resultPictures.push(randomPicture);
+        newPictures.splice(randomIndex, 1);
+        picturesLimit--;
       }
       return resultPictures;
     },
     getMostDiscussedElements: function (pictures) {
-      return pictures.slice().sort(function (first, second) {
-        return second.comments.length - first.comments.length;
+      return pictures.slice().sort(function (firstPicture, secondPicture) {
+        return secondPicture.comments.length - firstPicture.comments.length;
       });
     }
   };
-
 })();

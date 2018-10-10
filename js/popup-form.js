@@ -1,10 +1,11 @@
 'use strict';
+
 (function () {
   var VALIDATION_TAGS_LENGTH = 5;
   var VALIDATION_TAG_LENGTH = 20;
   var VALIDATION_COMMENT_LENGTH = 140;
   var KEY_CODE_ESC = 27;
-  var VALIDATION_ERROR_TEXT = {
+  var VALIDATION_ERROR_TEXT = { // ключи объекта с маленькой буквы
     StartWithHashError: 'Every hash must start from "#"',
     OnlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
     RepeatTagsError: 'You can\'t use similar hashtags',
@@ -12,12 +13,6 @@
     MoreThanTwentyCharsError: 'Your hashtags length can\'t be more than 20 characters',
     MoreThanAllowCharsComment: 'Your comment length mast be less than 140 characters include spaces'
   };
-  var inputHashtagsElement = document.querySelector('.text__hashtags');
-  var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
-  var uploadPictureElement = document.querySelector('#upload-file');
-  var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
-  var inputCommentElement = document.querySelector('.text__description');
-  var formElement = document.querySelector('#upload-select-image');
 
   var validateTags = function (tagsString) {
     var normalizedTagsString = tagsString
@@ -131,6 +126,13 @@
     }
   };
 
+  var inputHashtagsElement = document.querySelector('.text__hashtags');
+  var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
+  var uploadPictureElement = document.querySelector('#upload-file');
+  var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
+  var inputCommentElement = document.querySelector('.text__description');
+  var formElement = document.querySelector('#upload-select-image');
+
   closeEditPictureFormElement.addEventListener('click', closeEditingFormKeydownHandler);
   document.removeEventListener('click', closeEditingFormKeydownHandler);
 
@@ -179,5 +181,4 @@
     evt.preventDefault();
     window.backend.sendData(onLoad, onError, new FormData(formElement));
   });
-
 })();

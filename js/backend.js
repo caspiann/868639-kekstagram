@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var URL_GET_DATA = 'https://js.dump.academy/kekstagram/data';
   var URL_POST_DATA = 'https://js.dump.academy/kekstagram';
@@ -37,5 +38,4 @@
     getData: createRequest(URL_GET_DATA, 'GET'),
     sendData: createRequest(URL_POST_DATA, 'POST')
   };
-
 })();
