@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var effectValueElement = document.querySelector('.effect-level__value');
   var effectLevelPinElement = document.querySelector('.effect-level__pin');

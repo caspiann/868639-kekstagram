@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var EFFECT_DEFAULT_VALUE = 100;
   var EFFECTS = {

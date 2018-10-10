@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var VALIDATION_TAGS_LENGTH = 5;
   var VALIDATION_TAG_LENGTH = 20;
@@ -17,7 +16,7 @@
   var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
   var uploadPictureElement = document.querySelector('#upload-file');
   var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
-  var inputCommentsElement = document.querySelector('.text__description');
+  var inputCommentElement = document.querySelector('.text__description');
   var formElement = document.querySelector('#upload-select-image');
 
   var validateTags = function (tagsString) {
@@ -121,7 +120,7 @@
 
   var closeEditingFormKeydownHandler = function () {
     uploadPictureElement.value = '';
-    inputCommentsElement.value = '';
+    inputCommentElement.value = '';
     inputHashtagsElement.value = '';
     uploadPictureOverlayElement.classList.add('hidden');
   };
@@ -141,10 +140,10 @@
   inputHashtagsElement.addEventListener('focusout', function () {
     document.addEventListener('keydown', keydownEscPressHandler);
   });
-  inputCommentsElement.addEventListener('focusin', function () {
+  inputCommentElement.addEventListener('focusin', function () {
     document.removeEventListener('keydown', keydownEscPressHandler);
   });
-  inputCommentsElement.addEventListener('focusout', function () {
+  inputCommentElement.addEventListener('focusout', function () {
     document.addEventListener('keydown', keydownEscPressHandler);
   });
 
@@ -157,12 +156,12 @@
     }
   });
 
-  inputCommentsElement.addEventListener('change', function () {
-    var validation = validateComments(inputCommentsElement.value);
-    if (validation === true) {
-      inputCommentsElement.setCustomValidity('');
+  inputCommentElement.addEventListener('change', function () {
+    var isCommentValid = validateComments(inputCommentElement.value);
+    if (isCommentValid) {
+      inputCommentElement.setCustomValidity('');
     } else {
-      inputCommentsElement.setCustomValidity(VALIDATION_ERROR_TEXT.MoreThanAllowCharsComment);
+      inputCommentElement.setCustomValidity(VALIDATION_ERROR_TEXT.MoreThanAllowCharsComment);
     }
   });
 

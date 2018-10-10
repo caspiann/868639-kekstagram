@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
 
   var MIN_VALUE = 25;

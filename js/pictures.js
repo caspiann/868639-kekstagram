@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var GENERATE_AVATAR_MIN = 1;
   var GENERATE_AVATAR_MAX = 6;
@@ -94,32 +93,30 @@
     });
   };
 
-  var clearPhotos = function () {
+  var clearPictures = function () {
     var pictures = pictureElements.querySelectorAll('.picture');
     pictures.forEach(function (picture) {
       pictureElements.removeChild(picture);
     });
   };
 
+  var filterButtonClickHandler = function (evt) {
+    var activeFilterButton = evt.target;
+    clearActiveFiltersButton();
+    showPicturesFilterClickHandler(activeFilterButton);
+    clearPictures();
+    switch (activeFilterButton.getAttribute('id')) {
+      case FILTER_BUTTON_ATTRIBUTE_NEW: return renderPictures(window.picturesFilter.getNewPictures(window.cachePictures));
+      case FILTER_BUTTON_ATTRIBUTE_DISCUSSED: return renderPictures(window.picturesFilter.getMostDiscussedElements(window.cachePictures));
+      default: return renderPictures(window.cachePictures);
+    }
+  };
+
   var onLoad = function (responseServerData) {
     window.cachePictures = responseServerData;
-
     renderPictures(window.cachePictures);
-
     picturesFilterButtonElements.forEach(function (button) {
-      button.addEventListener('click', function (evt) {
-
-        var activeFilterButton = evt.target;
-        clearActiveFiltersButton();
-        showPicturesFilterClickHandler(activeFilterButton);
-        clearPhotos();
-
-        switch (activeFilterButton.getAttribute('id')) {
-          case FILTER_BUTTON_ATTRIBUTE_NEW: return renderPictures(window.picturesFilter.getNewPictures(window.cachePictures));
-          case FILTER_BUTTON_ATTRIBUTE_DISCUSSED: return renderPictures(window.picturesFilter.getMostDiscussedElements(window.cachePictures));
-          default: return renderPictures(window.cachePictures);
-        }
-      });
+      button.addEventListener('click', window.debounce(filterButtonClickHandler));
     });
   };
 

@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var ERROR_POPUP_TIMEOUT = 3000;
   var KEY_CODE_ESC = 27;
