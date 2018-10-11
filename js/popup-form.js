@@ -132,8 +132,6 @@
   var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
   var inputCommentElement = document.querySelector('.text__description');
   var formElement = document.querySelector('#upload-select-image');
-  // var uploadPictureElement = document.querySelector('#upload-file');
-  // uploadPictureElement.classList.remove('visually-hidden')
 
 
   closeEditPictureFormElement.addEventListener('click', closeEditingFormKeydownHandler);
@@ -182,13 +180,9 @@
     window.messages.createFailedSend(message);
   };
 
-  var formData = function(){
-    var newFormData = new FormData(formElement);
-    newFormData.append( 'file', input.files[0] );
-  }
 
   formElement.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.sendData(onLoad, onError, formData );
+    window.backend.sendData(onLoad, onError, new FormData(formElement));
   });
 })();
