@@ -7,6 +7,9 @@
   var FILTER_BUTTON_ATTRIBUTE_NEW = 'filter-new';
   var FILTER_BUTTON_ATTRIBUTE_DISCUSSED = 'filter-discussed';
   var FIRST_COMMENTS_LENGTH = 5;
+  var MODAL_BODY_STYLE = 'modal-open';
+
+  var bodyElement = document.querySelector('body');
 
   var renderPicture = function (template, picture) {
     var pictureElement = template.cloneNode(true);
@@ -44,12 +47,14 @@
   };
 
   var showBigPicture = function () {
+    bodyElement.classList.add(MODAL_BODY_STYLE);
     bigPictureElement.classList.remove('hidden');
     document.addEventListener('keydown', documentKeydownHandler);
     closeBigPictureElement.addEventListener('click', closeBigPictureElementClickHandler);
   };
 
   var hideBigPicture = function () {
+    bodyElement.classList.remove(MODAL_BODY_STYLE);
     bigPictureElement.classList.add('hidden');
     bigPictureCommentsBlockElement.innerHTML = '';
     document.removeEventListener('keydown', documentKeydownHandler);
