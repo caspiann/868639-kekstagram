@@ -29,7 +29,7 @@
 
     var checkTagsStartWithHash = function (tags) {
       var isValid = tags.every(function (tag) {
-        return tag.startsWith('#');
+        return tag.lastIndexOf('#') === 0;
       });
 
       if (!isValid) {
