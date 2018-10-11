@@ -5,8 +5,8 @@
   var KEY_CODE_ESC = 27;
 
   var errorBlockStyles = 'display: flex; justify-content: center; background: #EFFF00; color: #FF0000; width: 100%; padding: 5px 0; position: absolute; font-size: 20px';
-  var successTemplate = document.querySelector('#success').content;
-  var errorTemplate = document.querySelector('#error').content;
+  var successTemplate = document.querySelector('#success');
+  var errorTemplate = document.querySelector('#error');
   var mainElement = document.querySelector('main');
 
   var createPopupError = function (message) {
@@ -25,6 +25,13 @@
       closePopupHandler(successPopupElement);
     };
 
+    var closePopupHandler = function (popup) {
+      popup.parentNode.removeChild(popup);
+      successButtonElement.removeEventListener('click', successButtonClickHandler);
+      document.removeEventListener('keydown', documentKeydownHandler);
+      document.removeEventListener('click', documentClickHandler);
+    };
+
     var documentKeydownHandler = function (evt) {
       if (evt.keyCode === KEY_CODE_ESC) {
         closePopupHandler(successPopupElement);
@@ -38,15 +45,8 @@
       }
     };
 
-    var closePopupHandler = function (popup) {
-      popup.parentNode.removeChild(popup);
-      successButtonElement.removeEventListener('click', successButtonClickHandler);
-      document.removeEventListener('keydown', documentKeydownHandler);
-      document.removeEventListener('click', documentClickHandler);
-    };
-
     if (!message) {
-      mainElement.appendChild(errorTemplate);
+      mainElement.appendChild(errorTemplate.content);
       var errorPopupElement = mainElement.querySelector('.error');
       var errorButtonsElement = mainElement.querySelectorAll('.error__button');
 
@@ -70,13 +70,15 @@
       });
     }
 
-    mainElement.appendChild(successTemplate);
+    mainElement.appendChild(successTemplate.content);
     var successPopupElement = mainElement.querySelector('.success');
     var successButtonElement = mainElement.querySelector('.success__button');
 
     successButtonElement.addEventListener('click', successButtonClickHandler);
     document.addEventListener('keydown', documentKeydownHandler);
     document.addEventListener('click', documentClickHandler);
+
+
   };
 
   window.messages = {
