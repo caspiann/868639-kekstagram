@@ -123,7 +123,7 @@
   };
 
   var onError = function (message) {
-    window.popupError.createLoadError(message);
+    window.messages.createErrorLoad(message);
   };
 
   var pictureTemplateElement = document.querySelector('#picture');

@@ -5,13 +5,13 @@
   var VALIDATION_TAG_LENGTH = 20;
   var VALIDATION_COMMENT_LENGTH = 140;
   var KEY_CODE_ESC = 27;
-  var VALIDATION_ERROR_TEXT = { // ключи объекта с маленькой буквы
-    StartWithHashError: 'Every hash must start from "#"',
-    OnlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
-    RepeatTagsError: 'You can\'t use similar hashtags',
-    MoreThanFiveTagsError: 'You can\'t use more than 5 hashtags',
-    MoreThanTwentyCharsError: 'Your hashtags length can\'t be more than 20 characters',
-    MoreThanAllowCharsComment: 'Your comment length mast be less than 140 characters include spaces'
+  var VALIDATION_ERROR_TEXT = {
+    startWithHashError: 'Every hash must start from "#"',
+    onlyHashSymbolError: 'You can\'t use only "#" for your hashtag',
+    repeatTagsError: 'You can\'t use similar hashtags',
+    moreThanFiveTagsError: 'You can\'t use more than 5 hashtags',
+    moreThanTwentyCharsError: 'Your hashtags length can\'t be more than 20 characters',
+    moreThanAllowCharsComment: 'Your comment length mast be less than 140 characters include spaces'
   };
 
   var validateTags = function (tagsString) {
@@ -133,6 +133,7 @@
   var inputCommentElement = document.querySelector('.text__description');
   var formElement = document.querySelector('#upload-select-image');
 
+
   closeEditPictureFormElement.addEventListener('click', closeEditingFormKeydownHandler);
   document.removeEventListener('click', closeEditingFormKeydownHandler);
 
@@ -178,6 +179,7 @@
     closeEditingFormKeydownHandler();
     window.messages.createFailedSend(message);
   };
+
 
   formElement.addEventListener('submit', function (evt) {
     evt.preventDefault();
