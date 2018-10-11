@@ -5,11 +5,11 @@
   var KEY_CODE_ESC = 27;
 
   var errorBlockStyles = 'display: flex; justify-content: center; background: #EFFF00; color: #FF0000; width: 100%; padding: 5px 0; position: absolute; font-size: 20px';
-  var successTemplate = document.querySelector('#success');
-  var errorTemplate = document.querySelector('#error');
   var mainElement = document.querySelector('main');
+  var popupSuccessTemplate = document.querySelector('#success');
+  var popupFailedTemplate = document.querySelector('#error');
 
-  var createPopupError = function (message) {
+  var createErrorLoad = function (message) {
     var errorElement = document.createElement('div');
     errorElement.style = errorBlockStyles;
     errorElement.textContent = message;
@@ -20,70 +20,56 @@
     }, ERROR_POPUP_TIMEOUT);
   };
 
-  var createSendError = function (message) {
-    var successButtonClickHandler = function () {
-      closePopupHandler(successPopupElement);
-    };
-
-    var closePopupHandler = function (popup) {
-      popup.parentNode.removeChild(popup);
-      successButtonElement.removeEventListener('click', successButtonClickHandler);
-      document.removeEventListener('keydown', documentKeydownHandler);
-      document.removeEventListener('click', documentClickHandler);
-    };
-
-    var documentKeydownHandler = function (evt) {
+  var createDocumentKeydownHandler = function (popupElement, closePopup) {
+    return function (evt) {
       if (evt.keyCode === KEY_CODE_ESC) {
-        closePopupHandler(successPopupElement);
+        closePopup(popupElement);
       }
     };
+  };
 
-    var documentClickHandler = function (evt) {
+  var createDocumentClickHandler = function (popupElement, closePopup) {
+    return function (evt) {
       evt.stopPropagation();
-      if (evt.target === successPopupElement) {
-        closePopupHandler(successPopupElement);
+      if (evt.target === popupElement) {
+        closePopup(popupElement);
       }
     };
+  };
 
-    if (!message) {
-      mainElement.appendChild(errorTemplate.content);
-      var errorPopupElement = mainElement.querySelector('.error');
-      var errorButtonsElement = mainElement.querySelectorAll('.error__button');
+  var createPopupMessage = function (popupElementTemplate) {
+    return function () {
+      var popupElement = popupElementTemplate.content.firstElementChild.cloneNode(true);
+      var popupButtonElements = popupElement.querySelectorAll('button');
+      var popupButtonClickHandler = function () {
+        closePopup();
+      };
 
-      errorButtonsElement.forEach(function (button) {
-        button.addEventListener('click', function () {
-          closePopupHandler(errorPopupElement);
+      var closePopup = function () {
+        mainElement.removeChild(popupElement);
+        popupButtonElements.forEach(function (buttonElement) {
+          buttonElement.removeEventListener('click', popupButtonClickHandler);
         });
+        document.removeEventListener('keydown', documentKeydownHandler);
+        document.removeEventListener('click', documentClickHandler);
+      };
+
+      var documentKeydownHandler = createDocumentKeydownHandler(popupElement, closePopup);
+      var documentClickHandler = createDocumentClickHandler(popupElement, closePopup);
+
+      mainElement.appendChild(popupElement);
+
+      popupButtonElements.forEach(function (buttonElement) {
+        buttonElement.addEventListener('click', popupButtonClickHandler);
       });
-
-      document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === KEY_CODE_ESC) {
-          closePopupHandler(errorPopupElement);
-        }
-      });
-
-      document.addEventListener('click', function (evt) {
-        evt.stopPropagation();
-        if (evt.target === errorPopupElement) {
-          closePopupHandler(errorPopupElement);
-        }
-      });
-    }
-
-    mainElement.appendChild(successTemplate.content);
-    var successPopupElement = mainElement.querySelector('.success');
-    var successButtonElement = mainElement.querySelector('.success__button');
-
-    successButtonElement.addEventListener('click', successButtonClickHandler);
-    document.addEventListener('keydown', documentKeydownHandler);
-    document.addEventListener('click', documentClickHandler);
-
-
+      document.addEventListener('keydown', documentKeydownHandler);
+      document.addEventListener('click', documentClickHandler);
+    };
   };
 
   window.messages = {
-    createError: createPopupError,
-    createFailedSend: createSendError,
-    createSuccessSend: createSendError,
+    createErrorLoad: createErrorLoad,
+    createFailedSend: createPopupMessage(popupFailedTemplate),
+    createSuccessSend: createPopupMessage(popupSuccessTemplate),
   };
 })();
