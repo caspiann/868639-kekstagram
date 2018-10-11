@@ -32,10 +32,7 @@
         return tag.lastIndexOf('#') === 0;
       });
 
-      if (!isValid) {
-        return VALIDATION_ERROR_TEXT.startWithHashError;
-      }
-      return null;
+      return !isValid ? VALIDATION_ERROR_TEXT.startWithHashError : null;
     };
 
     var checkTagsOnlyHashSymbol = function (tags) {
@@ -43,10 +40,7 @@
         return tag !== '#';
       });
 
-      if (!isValid) {
-        return VALIDATION_ERROR_TEXT.onlyHashSymbolError;
-      }
-      return null;
+      return !isValid ? VALIDATION_ERROR_TEXT.onlyHashSymbolError : null;
     };
 
     var checkTagsRepeatTags = function (tags) {
@@ -57,30 +51,21 @@
         });
         var uniqArrayLength = Object.keys(uniqArray).length;
 
-        return tags.length === uniqArrayLength ? false : true;
+        return tags.length !== uniqArrayLength;
       };
 
-      if (hasDifferentTags()) {
-        return VALIDATION_ERROR_TEXT.repeatTagsError;
-      }
-      return null;
+      return hasDifferentTags() ? VALIDATION_ERROR_TEXT.repeatTagsError : null;
     };
 
     var checkTagsMoreThanFiveTags = function (tags) {
-      if (tags.length > VALIDATION_TAGS_LENGTH) {
-        return VALIDATION_ERROR_TEXT.moreThanFiveTagsError;
-      }
-      return null;
+      return tags.length > VALIDATION_TAGS_LENGTH ? VALIDATION_ERROR_TEXT.moreThanFiveTagsError : null;
     };
-
     var checkTagsMoreThanTwentyChars = function (tags) {
       var isValid = tags.some(function (tag) {
         return tag.length < VALIDATION_TAG_LENGTH;
       });
-      if (!isValid) {
-        return VALIDATION_ERROR_TEXT.moreThanTwentyCharsError;
-      }
-      return null;
+
+      return !isValid ? VALIDATION_ERROR_TEXT.moreThanTwentyCharsError : null;
     };
 
     var tags = normalizedTagsString.split(' ');
@@ -102,16 +87,13 @@
     }, []);
 
     return {
-      isValid: errors.length ? false : true,
+      isValid: !errors.length,
       firstError: errors[0]
     };
   };
 
   var validateComments = function (comment) {
-    if (comment === '' || comment.length < VALIDATION_COMMENT_LENGTH) {
-      return true;
-    }
-    return false;
+    return comment === '' || comment.length < VALIDATION_COMMENT_LENGTH ? true : false;
   };
 
   var closeEditingFormKeydownHandler = function () {
@@ -155,20 +137,17 @@
 
   inputHashtagsElement.addEventListener('change', function () {
     var validation = validateTags(inputHashtagsElement.value);
-    if (validation.isValid) {
-      inputHashtagsElement.setCustomValidity('');
-    } else {
-      inputHashtagsElement.setCustomValidity(validation.firstError);
-    }
+
+    inputHashtagsElement.setCustomValidity(
+        validation.isValid ? '' : validation.firstError
+    );
   });
 
   inputCommentElement.addEventListener('change', function () {
     var isCommentValid = validateComments(inputCommentElement.value);
-    if (isCommentValid) {
-      inputCommentElement.setCustomValidity('');
-    } else {
-      inputCommentElement.setCustomValidity(VALIDATION_ERROR_TEXT.moreThanAllowCharsComment);
-    }
+    inputCommentElement.setCustomValidity(
+        isCommentValid ? '' : VALIDATION_ERROR_TEXT.moreThanAllowCharsComment
+    );
   });
 
   var onLoad = function () {
