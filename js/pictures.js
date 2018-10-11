@@ -98,8 +98,8 @@
   };
 
   var clearPictures = function () {
-    var renderedPicturesElement = pictureElements.querySelectorAll('.picture');
-    renderedPicturesElement.forEach(function (picture) {
+    var renderedPictureElements = pictureElements.querySelectorAll('.picture');
+    renderedPictureElements.forEach(function (picture) {
       pictureElements.removeChild(picture);
     });
   };
