@@ -765,6 +765,10 @@ main {
   border-radius: 5px;
 }
 
+.text__hashtags:invalid,
+.text__description:invalid {
+  border: 2px solid red;
+}
 
 /**
  * Кнопка для отправки изображения
@@ -800,6 +804,8 @@ main {
 .img-upload__submit--disabled {
   opacity: 0.3;
 }
+
+
 
 
 /*

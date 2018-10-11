@@ -33,7 +33,7 @@
       });
 
       if (!isValid) {
-        return VALIDATION_ERROR_TEXT.StartWithHashError;
+        return VALIDATION_ERROR_TEXT.startWithHashError;
       }
       return null;
     };
@@ -44,7 +44,7 @@
       });
 
       if (!isValid) {
-        return VALIDATION_ERROR_TEXT.OnlyHashSymbolError;
+        return VALIDATION_ERROR_TEXT.onlyHashSymbolError;
       }
       return null;
     };
@@ -60,14 +60,14 @@
       };
 
       if (hasDifferentTags()) {
-        return VALIDATION_ERROR_TEXT.RepeatTagsError;
+        return VALIDATION_ERROR_TEXT.repeatTagsError;
       }
       return null;
     };
 
     var checkTagsMoreThanFiveTags = function (tags) {
       if (tags.length > VALIDATION_TAGS_LENGTH) {
-        return VALIDATION_ERROR_TEXT.MoreThanFiveTagsError;
+        return VALIDATION_ERROR_TEXT.moreThanFiveTagsError;
       }
       return null;
     };
@@ -77,7 +77,7 @@
         return tag.length < VALIDATION_TAG_LENGTH;
       });
       if (!isValid) {
-        return VALIDATION_ERROR_TEXT.MoreThanTwentyCharsError;
+        return VALIDATION_ERROR_TEXT.moreThanTwentyCharsError;
       }
       return null;
     };
@@ -166,7 +166,7 @@
     if (isCommentValid) {
       inputCommentElement.setCustomValidity('');
     } else {
-      inputCommentElement.setCustomValidity(VALIDATION_ERROR_TEXT.MoreThanAllowCharsComment);
+      inputCommentElement.setCustomValidity(VALIDATION_ERROR_TEXT.moreThanAllowCharsComment);
     }
   });
 
