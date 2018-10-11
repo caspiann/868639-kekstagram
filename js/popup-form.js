@@ -52,10 +52,11 @@
     var checkTagsRepeatTags = function (tags) {
       var hasDifferentTags = function () {
         var uniqArray = {};
-        for (var i = 0; i < tags.length; i++) {
-          uniqArray[tags[i]] = true;
-        }
+        tags.forEach(function (tag) {
+          uniqArray[tag] = true;
+        });
         var uniqArrayLength = Object.keys(uniqArray).length;
+
         return tags.length === uniqArrayLength ? false : true;
       };
 
