@@ -50,19 +50,27 @@
   var inputHashtagsElementChangeHandler = function () {
     var validation = window.popupFormValidation.validateTags(inputHashtagsElement.value);
 
-    inputHashtagsElement.setCustomValidity(
-        validation.isValid ? '' : validation.firstError
-    );
-    inputHashtagsElement.style = errorBorderStyle;
+    if (validation.isValid) {
+      inputHashtagsElement.setCustomValidity('');
+      inputHashtagsElement.style = '';
+    } else {
+      inputHashtagsElement.setCustomValidity(validation.firstError);
+      inputHashtagsElement.style = errorBorderStyle;
+    }
+
   };
 
   var inputCommentElementChangeHandler = function (evt) {
     var targetElement = evt.target;
     var isValid = targetElement.value.length < VALIDATION_COMMENT_LENGTH;
-    targetElement.setCustomValidity(
-        isValid ? '' : window.popupFormValidation.validationErrorText.moreThanAllowCharsComment
-    );
-    targetElement.style = errorBorderStyle;
+
+    if (isValid) {
+      targetElement.setCustomValidity('');
+      targetElement.style = '';
+    } else {
+      targetElement.setCustomValidity(window.popupFormValidation.validationErrorText.moreThanAllowCharsComment);
+      targetElement.style = errorBorderStyle;
+    }
   };
 
   var formElementSubmitHandler = function (evt) {
