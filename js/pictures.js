@@ -51,6 +51,8 @@
   var showBigPicture = function () {
     bodyElement.classList.add(MODAL_BODY_STYLE);
     bigPictureElement.classList.remove('hidden');
+    bigPictureElement.tabIndex = 0;
+    bigPictureElement.focus();
     document.addEventListener('keydown', documentKeydownHandler);
     closeBigPictureElement.addEventListener('click', closeBigPictureElementClickHandler);
   };
@@ -128,9 +130,7 @@
 
   var onLoad = function (pictures) {
     cachedPictures = pictures.slice();
-
     renderPictures(cachedPictures);
-
     picturesFilterButtonElements.forEach(function (buttonElement) {
       buttonElement.addEventListener('click', window.debounce(filterButtonClickHandler));
     });
