@@ -10,9 +10,6 @@
   var scaleControlBiggerElement = document.querySelector('.scale__control--bigger');
   var scaleControlValueElement = document.querySelector('.scale__control--value');
 
-  scaleControlValueElement.value = MAX_VALUE + '%';
-  imgPreviewElement.style.transform = 'scale(' + MAX_VALUE / 100 + ')';
-
   var createScaleClickHandler = function (scaleValue) {
     return function clickHandler() {
       var currentScale = Math.max(MIN_VALUE, Math.min(MAX_VALUE, parseInt(scaleControlValueElement.value, 10) + scaleValue));
@@ -24,6 +21,20 @@
     };
   };
 
-  scaleControlBiggerElement.addEventListener('click', createScaleClickHandler(STEP));
-  scaleControlSmallerElement.addEventListener('click', createScaleClickHandler(-STEP));
+  var scaleControlBiggerClickHandle = createScaleClickHandler(STEP);
+  var scaleControlSmallerClickHandle = createScaleClickHandler(-STEP);
+
+  window.popupScale = {
+    activate: function () {
+      scaleControlValueElement.value = MAX_VALUE + '%';
+      imgPreviewElement.style.transform = 'scale(' + MAX_VALUE / 100 + ')';
+
+      scaleControlBiggerElement.addEventListener('click', scaleControlBiggerClickHandle);
+      scaleControlSmallerElement.addEventListener('click', scaleControlSmallerClickHandle);
+    },
+    deactivate: function () {
+      scaleControlBiggerElement.removeEventListener('click', scaleControlBiggerClickHandle);
+      scaleControlSmallerElement.removeEventListener('click', scaleControlSmallerClickHandle);
+    },
+  };
 })();

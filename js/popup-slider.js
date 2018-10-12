@@ -7,7 +7,7 @@
   var imagePreviewElement = document.querySelector('.img-upload__preview img');
   var effectLevelDepthElement = document.querySelector('.effect-level__depth');
 
-  effectLevelPinElement.addEventListener('mousedown', function (mouseDownEvent) {
+  var effectLevelPinElementMouseDownHandler = function (mouseDownEvent) {
     var pinCoordsLeft = effectLevelPinElement.getBoundingClientRect().left;
     var sliderCoordsLeft = effectLevelLineElement.getBoundingClientRect().left;
     var sliderOffsetWidth = effectLevelLineElement.offsetWidth;
@@ -24,7 +24,7 @@
       effectLevelPinElement.style.left = pinOffsetLeftValue + 'px';
       effectLevelDepthElement.style.width = effectLevelPinElement.style.left;
 
-      imagePreviewElement.style.filter = window.popupFilterStyles.createPreviewFilterStyle(effectPercentValue);
+      imagePreviewElement.style.filter = window.popupEffects.createPreviewFilterStyle(effectPercentValue);
     };
     var mouseUpHandler = function () {
       document.removeEventListener('mousemove', mouseMoveHandler);
@@ -32,5 +32,14 @@
     };
     document.addEventListener('mousemove', mouseMoveHandler);
     document.addEventListener('mouseup', mouseUpHandler);
-  });
+  };
+
+  window.popupSlider = {
+    activate: function () {
+      effectLevelPinElement.addEventListener('mousedown', effectLevelPinElementMouseDownHandler);
+    },
+    deactivate: function () {
+      effectLevelPinElement.removeEventListener('mousedown', effectLevelPinElementMouseDownHandler);
+    }
+  };
 })();

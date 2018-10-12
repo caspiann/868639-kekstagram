@@ -36,13 +36,12 @@
   };
 
   var effectElements = Array.prototype.slice.call(document.querySelectorAll('.effects__item'));
-  var imagePreviewElement = document.querySelector('.img-upload__preview img');
+  var effectDefaultElement = document.querySelector('.effects__item:first-child');
   var effectLevelLineElement = document.querySelector('.effect-level__line');
   var effectLevelDepthElement = document.querySelector('.effect-level__depth');
   var effectLevelPinElement = document.querySelector('.effect-level__pin');
   var effectLevelElement = document.querySelector('.effect-level');
-  var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
-  var uploadPictureElement = document.querySelector('#upload-file');
+  var imagePreviewElement = document.querySelector('.img-upload__preview img');
 
   var convertValueToScale = function (max, min, value) {
     return ((max - min) * value) / 100 + min;
@@ -50,16 +49,15 @@
 
   var createEffectClickHandler = function (effectElement) {
     return function () {
-      var efffectInputElement = effectElement.querySelector('input');
-      var effectName = efffectInputElement.value;
-      var effectPercent = effectLevelLineElement.offsetWidth + 'px';
+      var effectInputElement = effectElement.querySelector('input');
+      var effectName = effectInputElement.value;
+      var effectValue = effectLevelLineElement.offsetWidth + 'px';
 
-      imagePreviewElement.style.filter = window.popupFilterStyles.createPreviewFilterStyle(EFFECT_DEFAULT_VALUE);
-      imagePreviewElement.classList.remove(imagePreviewElement.classList[0]);
-      imagePreviewElement.classList.add('effects__preview--' + effectName);
+      imagePreviewElement.className = 'effects__preview--' + effectName;
+      imagePreviewElement.style.filter = window.popupEffects.createPreviewFilterStyle(EFFECT_DEFAULT_VALUE);
 
-      effectLevelDepthElement.style.width = effectPercent;
-      effectLevelPinElement.style.left = effectPercent;
+      effectLevelDepthElement.style.width = effectValue;
+      effectLevelPinElement.style.left = effectValue;
 
       if (effectName === EFFECT_NONE) {
         effectLevelElement.classList.add('hidden');
@@ -69,17 +67,26 @@
     };
   };
 
-  uploadPictureElement.addEventListener('change', function () {
-    uploadPictureOverlayElement.classList.remove('hidden');
-    effectLevelDepthElement.style.width = effectLevelPinElement.style.left = effectLevelLineElement.offsetWidth + 'px';
-    effectLevelElement.classList.add('hidden');
+  var handlers = effectElements.map(function (effectElement) {
+    return createEffectClickHandler(effectElement);
   });
 
-  effectElements.forEach(function (effectElement) {
-    effectElement.addEventListener('click', createEffectClickHandler(effectElement));
-  });
+  window.popupEffects = {
+    activate: function () {
+      imagePreviewElement.className = 'effects__preview--' + EFFECT_NONE;
+      imagePreviewElement.style.filter = 'none';
+      effectLevelElement.classList.add('hidden');
+      effectDefaultElement.querySelector('.effects__radio').checked = true;
 
-  window.popupFilterStyles = {
+      effectElements.forEach(function (effectElement, index) {
+        effectElement.addEventListener('click', handlers[index]);
+      });
+    },
+    deactivate: function () {
+      effectElements.forEach(function (effectElement, index) {
+        effectElement.removeEventListener('click', handlers[index]);
+      });
+    },
     createPreviewFilterStyle: function (value) {
       switch (imagePreviewElement.getAttribute('class')) {
         case EFFECTS.chrome.effect:
