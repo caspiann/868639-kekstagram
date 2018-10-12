@@ -27,6 +27,7 @@
   var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
   var inputHashtagsElement = document.querySelector('.text__hashtags');
   var inputCommentElement = document.querySelector('.text__description');
+  var uploadPictureElement = document.querySelector('#upload-file');
   var formElement = document.querySelector('#upload-select-image');
 
   var inputHashtagsElementFocusinHandler = function () {
@@ -86,6 +87,8 @@
       formElement.addEventListener('submit', formElementSubmitHandler);
     },
     deactivate: function () {
+      uploadPictureElement.value = '';
+
       closeEditPictureFormElement.removeEventListener('click', closeEditingFormKeydownHandler);
 
       document.removeEventListener('keydown', keydownEscPressHandler);
