@@ -24,8 +24,8 @@
     window.messages.createFailedSend(message);
   };
 
-  var inputHashtagsElement = document.querySelector('.text__hashtags');
   var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
+  var inputHashtagsElement = document.querySelector('.text__hashtags');
   var inputCommentElement = document.querySelector('.text__description');
   var formElement = document.querySelector('#upload-select-image');
 
@@ -68,7 +68,8 @@
 
   window.popupForm = {
     activate: function () {
-      formElement.reset();
+      inputHashtagsElement.value = '';
+      inputCommentElement.value = '';
 
       closeEditPictureFormElement.addEventListener('click', closeEditingFormKeydownHandler);
 
