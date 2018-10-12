@@ -15,8 +15,7 @@
 
   var createScaleClickHandler = function (scaleValue) {
     return function clickHandler() {
-      var currentScale = parseInt(scaleControlValueElement.value, 10);
-      currentScale = currentScale + (scaleValue);
+      var currentScale = Math.max(MIN_VALUE, Math.min(MAX_VALUE, parseInt(scaleControlValueElement.value, 10) + scaleValue));
 
       if (currentScale >= MIN_VALUE && currentScale <= MAX_VALUE) {
         scaleControlValueElement.value = currentScale + '%';

@@ -48,10 +48,10 @@
     return ((max - min) * value) / 100 + min;
   };
 
-  var createEffectClickHandler = function (effect) {
+  var createEffectClickHandler = function (effectElement) {
     return function () {
-      var target = effect.querySelector('input');
-      var effectName = target.value;
+      var efffectInputElement = effectElement.querySelector('input');
+      var effectName = efffectInputElement.value;
       var effectPercent = effectLevelLineElement.offsetWidth + 'px';
 
       imagePreviewElement.style.filter = window.popupFilterStyles.createPreviewFilterStyle(EFFECT_DEFAULT_VALUE);
@@ -75,8 +75,8 @@
     effectLevelElement.classList.add('hidden');
   });
 
-  effectElements.forEach(function (effect) {
-    effect.addEventListener('click', createEffectClickHandler(effect));
+  effectElements.forEach(function (effectElement) {
+    effectElement.addEventListener('click', createEffectClickHandler(effectElement));
   });
 
   window.popupFilterStyles = {

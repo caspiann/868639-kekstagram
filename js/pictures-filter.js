@@ -8,12 +8,12 @@
   };
 
   window.picturesFilter = {
-    getNewPictures: function (pictures) {
+    filterNewPictures: function (pictures) {
       var newPictures = pictures.slice();
       var resultPictures = [];
       var picturesLimit = PICTURE_FILTER_LIMIT;
       while (newPictures.length && picturesLimit > 0) {
-        var randomIndex = generateNumber(0, newPictures.length);
+        var randomIndex = generateNumber(0, newPictures.length - 1);
         var randomPicture = newPictures[randomIndex];
         resultPictures.push(randomPicture);
         newPictures.splice(randomIndex, 1);
@@ -21,7 +21,7 @@
       }
       return resultPictures;
     },
-    getMostDiscussedElements: function (pictures) {
+    filterMostDiscussed: function (pictures) {
       return pictures.slice().sort(function (firstPicture, secondPicture) {
         return secondPicture.comments.length - firstPicture.comments.length;
       });
