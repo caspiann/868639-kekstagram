@@ -3,6 +3,7 @@
 (function () {
   var KEY_CODE_ESC = 27;
   var VALIDATION_COMMENT_LENGTH = 140;
+  var errorBorderStyle = 'border: 2px solid red;';
 
   var closeEditingFormKeydownHandler = function () {
     window.popup.hide();
@@ -52,6 +53,7 @@
     inputHashtagsElement.setCustomValidity(
         validation.isValid ? '' : validation.firstError
     );
+    inputHashtagsElement.style = errorBorderStyle;
   };
 
   var inputCommentElementChangeHandler = function (evt) {
@@ -60,6 +62,7 @@
     targetElement.setCustomValidity(
         isValid ? '' : window.popupFormValidation.validationErrorText.moreThanAllowCharsComment
     );
+    targetElement.style = errorBorderStyle;
   };
 
   var formElementSubmitHandler = function (evt) {
@@ -88,6 +91,8 @@
     },
     deactivate: function () {
       uploadPictureElement.value = '';
+      inputHashtagsElement.style = '';
+      inputCommentElement.style = '';
 
       closeEditPictureFormElement.removeEventListener('click', closeEditingFormKeydownHandler);
 
