@@ -93,9 +93,7 @@
   };
 
   var closeEditingFormKeydownHandler = function () {
-    uploadPictureElement.value = '';
-    inputCommentElement.value = '';
-    inputHashtagsElement.value = '';
+    formElement.reset();
     uploadPictureOverlayElement.classList.add('hidden');
   };
 
@@ -107,7 +105,6 @@
 
   var inputHashtagsElement = document.querySelector('.text__hashtags');
   var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
-  var uploadPictureElement = document.querySelector('#upload-file');
   var uploadPictureOverlayElement = document.querySelector('.img-upload__overlay');
   var inputCommentElement = document.querySelector('.text__description');
   var formElement = document.querySelector('#upload-select-image');
