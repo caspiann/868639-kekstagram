@@ -8,7 +8,7 @@
   };
 
   window.picturesFilter = {
-    getNewPictures: function (pictures) {
+    filterNewPictures: function (pictures) {
       var newPictures = pictures.slice();
       var resultPictures = [];
       var picturesLimit = PICTURE_FILTER_LIMIT;
@@ -21,7 +21,7 @@
       }
       return resultPictures;
     },
-    getMostDiscussedElements: function (pictures) {
+    filterMostDiscussed: function (pictures) {
       return pictures.slice().sort(function (firstPicture, secondPicture) {
         return secondPicture.comments.length - firstPicture.comments.length;
       });

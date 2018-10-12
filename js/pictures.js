@@ -4,8 +4,8 @@
   var GENERATE_AVATAR_MIN = 1;
   var GENERATE_AVATAR_MAX = 6;
   var KEY_CODE_ESC = 27;
-  var FILTER_BUTTON_ATTRIBUTE_NEW = 'filter-new';
-  var FILTER_BUTTON_ATTRIBUTE_DISCUSSED = 'filter-discussed';
+  var FILTER_NEW = 'new';
+  var FILTER_DISCUSSED = 'discussed';
   var FIRST_COMMENTS_LENGTH = 5;
   var MODAL_BODY_STYLE = 'modal-open';
   var AVATAR_FORMAT = '.svg';
@@ -113,19 +113,23 @@
     showPicturesFilterClickHandler(activeFilterButtonElement);
     clearPictures();
 
-    var pictures = window.pictures.cachePictures;
+    var filterAttributeId = activeFilterButtonElement.getAttribute('id');
+    var filterName = filterAttributeId.split('-')[1];
 
-    switch (activeFilterButtonElement.getAttribute('id')) {
-      case FILTER_BUTTON_ATTRIBUTE_NEW: return renderPictures(window.picturesFilter.getNewPictures(pictures));
-      case FILTER_BUTTON_ATTRIBUTE_DISCUSSED: return renderPictures(window.picturesFilter.getMostDiscussedElements(pictures));
-      default: return renderPictures(pictures);
+    switch (filterName) {
+      case FILTER_NEW:
+        return renderPictures(window.picturesFilter.filterNewPictures(cachedPictures));
+      case FILTER_DISCUSSED:
+        return renderPictures(window.picturesFilter.filterMostDiscussed(cachedPictures));
+      default:
+        return renderPictures(cachedPictures);
     }
   };
 
   var onLoad = function (pictures) {
-    window.pictures.cachePictures = pictures.slice();
+    cachedPictures = pictures.slice();
 
-    renderPictures(pictures);
+    renderPictures(cachedPictures);
 
     picturesFilterButtonElements.forEach(function (buttonElement) {
       buttonElement.addEventListener('click', window.debounce(filterButtonClickHandler));
@@ -136,6 +140,7 @@
     window.messages.createErrorLoad(message);
   };
 
+  var cachedPictures = [];
   var pictureTemplateElement = document.querySelector('#picture');
   var pictureElements = document.querySelector('.pictures');
   var bigPictureElement = document.querySelector('.big-picture');
@@ -146,8 +151,4 @@
   var picturesFilterButtonElements = pictureFilterElement.querySelectorAll('.img-filters__button');
 
   window.backend.getData(onLoad, onError);
-
-  window.pictures = {
-    cachedPictures: []
-  };
 })();

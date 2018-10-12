@@ -50,8 +50,8 @@
 
   var createEffectClickHandler = function (effectElement) {
     return function () {
-      var targetElement = effectElement.querySelector('input');
-      var effectName = targetElement.value;
+      var efffectInputElement = effectElement.querySelector('input');
+      var effectName = efffectInputElement.value;
       var effectPercent = effectLevelLineElement.offsetWidth + 'px';
 
       imagePreviewElement.style.filter = window.popupFilterStyles.createPreviewFilterStyle(EFFECT_DEFAULT_VALUE);
