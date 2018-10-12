@@ -48,9 +48,9 @@
     return ((max - min) * value) / 100 + min;
   };
 
-  var createEffectClickHandler = function (effect) {
+  var createEffectClickHandler = function (effectElement) {
     return function () {
-      var targetElement = effect.querySelector('input');
+      var targetElement = effectElement.querySelector('input');
       var effectName = targetElement.value;
       var effectPercent = effectLevelLineElement.offsetWidth + 'px';
 
@@ -75,8 +75,8 @@
     effectLevelElement.classList.add('hidden');
   });
 
-  effectElements.forEach(function (effect) {
-    effect.addEventListener('click', createEffectClickHandler(effect));
+  effectElements.forEach(function (effectElement) {
+    effectElement.addEventListener('click', createEffectClickHandler(effectElement));
   });
 
   window.popupFilterStyles = {

@@ -92,10 +92,6 @@
     };
   };
 
-  var validateComments = function (comment) {
-    return comment === '' || comment.length < VALIDATION_COMMENT_LENGTH ? true : false;
-  };
-
   var closeEditingFormKeydownHandler = function () {
     uploadPictureElement.value = '';
     inputCommentElement.value = '';
@@ -143,10 +139,11 @@
     );
   });
 
-  inputCommentElement.addEventListener('change', function () {
-    var isCommentValid = validateComments(inputCommentElement.value);
-    inputCommentElement.setCustomValidity(
-        isCommentValid ? '' : VALIDATION_ERROR_TEXT.moreThanAllowCharsComment
+  inputCommentElement.addEventListener('change', function (evt) {
+    var targetElement = evt.target;
+    var isValid = targetElement.value.length < VALIDATION_COMMENT_LENGTH;
+    targetElement.setCustomValidity(
+        isValid ? '' : VALIDATION_ERROR_TEXT.moreThanAllowCharsComment
     );
   });
 

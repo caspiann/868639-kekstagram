@@ -113,16 +113,19 @@
     showPicturesFilterClickHandler(activeFilterButtonElement);
     clearPictures();
 
+    var pictures = window.pictures.cachePictures;
+
     switch (activeFilterButtonElement.getAttribute('id')) {
-      case FILTER_BUTTON_ATTRIBUTE_NEW: return renderPictures(window.picturesFilter.getNewPictures(window.cachePictures));
-      case FILTER_BUTTON_ATTRIBUTE_DISCUSSED: return renderPictures(window.picturesFilter.getMostDiscussedElements(window.cachePictures));
-      default: return renderPictures(window.cachePictures);
+      case FILTER_BUTTON_ATTRIBUTE_NEW: return renderPictures(window.picturesFilter.getNewPictures(pictures));
+      case FILTER_BUTTON_ATTRIBUTE_DISCUSSED: return renderPictures(window.picturesFilter.getMostDiscussedElements(pictures));
+      default: return renderPictures(pictures);
     }
   };
 
-  var onLoad = function (responseServerData) {
-    window.cachePictures = responseServerData;
-    renderPictures(window.cachePictures);
+  var onLoad = function (pictures) {
+    window.pictures.cachePictures = pictures.slice();
+
+    renderPictures(pictures);
 
     picturesFilterButtonElements.forEach(function (buttonElement) {
       buttonElement.addEventListener('click', window.debounce(filterButtonClickHandler));
@@ -143,4 +146,8 @@
   var picturesFilterButtonElements = pictureFilterElement.querySelectorAll('.img-filters__button');
 
   window.backend.getData(onLoad, onError);
+
+  window.pictures = {
+    cachedPictures: []
+  };
 })();
