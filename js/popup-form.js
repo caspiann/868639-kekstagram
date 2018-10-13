@@ -6,18 +6,19 @@
   var errorBorderStyle = 'border: 2px solid red;';
 
   function inputPreviewPicture() {
-    var preview = document.querySelector('.img-upload__preview img');
-    var file = document.querySelector('input[type=file]').files[0];
+    var previewElement = document.querySelector('.img-upload__preview img');
+    var uploadPictureElement = document.querySelector('#upload-file');
+    var file = uploadPictureElement.files[0];
     var reader = new FileReader();
 
     reader.onloadend = function () {
-      preview.src = reader.result;
+      previewElement.src = reader.result;
     };
 
     if (file) {
       reader.readAsDataURL(file);
     } else {
-      preview.src = '';
+      previewElement.src = '';
     }
   }
 
