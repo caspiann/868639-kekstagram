@@ -4,6 +4,23 @@
   var KEY_CODE_ESC = 27;
   var VALIDATION_COMMENT_LENGTH = 140;
   var errorBorderStyle = 'border: 2px solid red;';
+  var previewElement = document.querySelector('.img-upload__preview img');
+  var uploadPictureElement = document.querySelector('#upload-file');
+
+
+  function inputPreviewPicture() {
+    var reader = new FileReader();
+    var file = uploadPictureElement.files[0];
+    reader.onloadend = function () {
+      previewElement.src = reader.result;
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      previewElement.src = '';
+    }
+  }
 
   var closeEditingFormKeydownHandler = function () {
     window.popup.hide();
@@ -28,7 +45,6 @@
   var closeEditPictureFormElement = document.querySelector('.img-upload__cancel');
   var inputHashtagsElement = document.querySelector('.text__hashtags');
   var inputCommentElement = document.querySelector('.text__description');
-  var uploadPictureElement = document.querySelector('#upload-file');
   var formElement = document.querySelector('#upload-select-image');
 
   var inputHashtagsElementFocusinHandler = function () {
@@ -80,6 +96,7 @@
 
   window.popupForm = {
     activate: function () {
+      inputPreviewPicture();
       inputHashtagsElement.value = '';
       inputCommentElement.value = '';
 
