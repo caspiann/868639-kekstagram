@@ -8,7 +8,7 @@
   var uploadPictureElement = document.querySelector('#upload-file');
 
 
-  function inputPreviewPicture() {
+  function createPreviewPicture() {
     var reader = new FileReader();
     var file = uploadPictureElement.files[0];
     reader.onloadend = function () {
@@ -96,7 +96,7 @@
 
   window.popupForm = {
     activate: function () {
-      inputPreviewPicture();
+      createPreviewPicture();
       inputHashtagsElement.value = '';
       inputCommentElement.value = '';
 
